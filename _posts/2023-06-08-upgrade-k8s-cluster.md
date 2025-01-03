@@ -22,10 +22,10 @@ _**The process won't follow for any production cluster!**_
 
 ### Aim
 
-To upgrade a Kubernetes cluster with nodes running Kubernetes Version v1.26.4 to v1.27.2
+To upgrade a Kubernetes cluster with nodes running Kubernetes Version v1.26.4 to v1.27.2. \\
 I'm using a Kubernetes cluster created using Kind, for the example sake.
 
-### [STEP 1] Create a kind Kubernetes cluster
+#### STEP 1 — Create a kind Kubernetes cluster
 
 Use the following `kind-config.yaml` file:
 
@@ -82,7 +82,7 @@ Note that the version of both nodes is currently `v1.26.4`
 
 ---
 
-### [STEP 2] Upgrade the control plane node
+#### STEP 2 — Upgrade the control plane node
 
 **Exec inside the docker container corresponding to the control plane node (kind-control-plane):**
 
@@ -406,7 +406,7 @@ exit
 
 ---
 
-### [STEP 3] Upgrade the worker node
+#### STEP 3 — Upgrade the worker node
 
 **Exec inside the docker container corresponding to the worker node (kind-worker):**
 
