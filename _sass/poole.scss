@@ -148,9 +148,12 @@ abbr[title] {
 }
 
 /* Code */
-code,
-pre {
+code, pre {
   font-family: "Source Code Pro", Monaco, "Courier New", monospace;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+
 }
 code {
   padding: .25em .15em;
