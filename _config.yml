@@ -1,6 +1,6 @@
 title: Priyanka Saggu
 url: 'https://psaggu.com'
-description: 'I speak here {^_^}'
+description: 'Vita et omnia in scribis'
 
 exclude: [Gemfile, Gemfile.lock, README.md]
 markdown: kramdown
