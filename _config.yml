@@ -1,6 +1,6 @@
 title: Priyanka Saggu
 url: 'https://psaggu.com'
-description: 'Vita et omnia in scribis'
+description: 'cogitationes, labores, et gratiae (thoughts, works, and gratitudes)'
 
 exclude: [Gemfile, Gemfile.lock, README.md]
 markdown: kramdown
