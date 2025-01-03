@@ -20,10 +20,9 @@ _This documentation is just for educational purpose._
 
 _**The process won't follow for any production cluster!**_
 
-## Aim
+### Aim
 
 To upgrade a Kubernetes cluster with nodes running Kubernetes Version v1.26.4 to v1.27.2
-
 I'm using a Kubernetes cluster created using Kind, for the example sake.
 
 ### [STEP 1] Create a kind Kubernetes cluster
@@ -129,7 +128,7 @@ Configuration file '/etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
  ==> File on system created by you or by a script.
  ==> File also in package provided by package maintainer.
    What would you like to do about it ?  Your options are:
-    Y or I  : install the package maintainer's version
+    Y or I  : install the package maintainer\'s version
     N or O  : keep your currently-installed version
       D     : show the differences between the versions
       Z     : start a shell to examine the situation
@@ -439,7 +438,7 @@ Configuration file '/etc/systemd/system/kubelet.service.d/10-kubeadm.conf'
  ==> File on system created by you or by a script.
  ==> File also in package provided by package maintainer.
    What would you like to do about it ?  Your options are:
-    Y or I  : install the package maintainer's version
+    Y or I  : install the package maintainer\'s version
     N or O  : keep your currently-installed version
       D     : show the differences between the versions
       Z     : start a shell to examine the situation
