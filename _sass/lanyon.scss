@@ -41,7 +41,10 @@ body {
 }
 
 html {
-  font-family: "Crimson Text", "PT Serif", Georgia, "Times New Roman", serif;
+  font-family: "Crimson Pro", "PT Serif", Georgia, "Times New Roman", serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
 h1, h2, h3, h4, h5, h6 {
