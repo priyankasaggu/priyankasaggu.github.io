@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The First, CNCF Maintainer Summit, 2024!"
+title: "The First, CNCF Maintainer Summit, 2024"
 tags: [kubernetes, cncf, maintainer-summit-india, kubecon-india]
 comments: false
 ---
