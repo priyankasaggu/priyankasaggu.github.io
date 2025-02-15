@@ -12,7 +12,7 @@ The event took place on **December 10, 2024**, as part of the KubeCon + CloudNat
 
 <figure style="text-align: center;">
   <img src="https://github.com/user-attachments/assets/da8c272c-8025-4ce1-9e9e-f397a548f532" alt="Maintainer Summit India 2024, Community Team" style="display: block; margin: 0 auto;"/>
-  <figcaption style="text-align: center;"><em>Meet the community team of the Maintainers Summit India 2024.<br>From left to right – Bob Killian,Nabarun Pal (fellow co-chair), Priyanka Saggu (me), Mario Jason Braganza, Sandeep Kanabar, Arvind Parekh, and Arka Saha.
+  <figcaption style="text-align: center;"><em>Meet the community team of the Maintainer Summit India 2024.<br>From left to right – Bob Killian,Nabarun Pal (fellow co-chair), Priyanka Saggu (me), Mario Jason Braganza, Sandeep Kanabar, Arvind Parekh, and Arka Saha.
 </em></figcaption>
 </figure>
 
