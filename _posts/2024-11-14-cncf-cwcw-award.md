@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "On receieving the CNCF Community Award, 2024"
+title: "On receiving the CNCF Community Award, 2024"
 tags: [kubernetes, cncf]
 comments: false
 ---
