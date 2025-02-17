@@ -7,11 +7,11 @@ comments: false
 
 
 Today, during our pair-(learning/programming) session for the [KEP 4595](https://github.com/kubernetes/enhancements/issues/4595) aka, CEL for CRD AdditionalPrinterColumns, [Sreeram](https://sreeram.xyz/) and I, came across this article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure).  
-(It's an old article from 2019, written by Dr. Stefan Schimanski [^2]. I will check if & what anything changed since 2019, but still reading this article in its current state, itself, was a turning point for me w.r.t my understanding of CRD(s).)
+(It's an old article from 2019, written by Dr. Stefan Schimanski[^2]. I will check if & what anything changed since 2019, but still reading this article in its current state, itself, was a turning point for me w.r.t my understanding of CRD(s).)
 
 For the first time today, I understood - what is `structual schema` (something that I keep reading about and keep finding it refereneced everywhere within the kubernetes codebase, over and over again.)
 
-So, **T**oday **I** **L**earnt (TIL) [^1]:
+So, **T**oday **I** **L**earnt (TIL)[^1]:
 
 _**An OpenAPI v3 schema is a Structual Schema, if:**_
 
@@ -124,8 +124,8 @@ Pruning in `apiextensions.k8s.io/v1beta1` is enabled via:
 --- 
 ---
 
-[1] This's just me rephrasing, all what I learnt from and is mentioned in the original article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure).  
-[2] well, while searching for links to add as hyperlink for Dr. Stefan Schimanski, I came across more articles written by him, so, those are for my ToDos now.  
+[^1]: This's just me rephrasing, all what I learnt from and is mentioned in the original article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure).  
+[^2]: well, while searching for links to add as hyperlink for Dr. Stefan Schimanski, I came across more articles written by him, so, those are for my ToDos now.  
 - [Kubernetes Deep Dive: Code Generation for CustomResources](https://www.redhat.com/en/blog/kubernetes-deep-dive-code-generation-customresources)
 - [Kubernetes deep dive: API Server - part 1](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-1)
 - [Kubernetes Deep Dive: API Server – Part 2](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2)
