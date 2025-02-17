@@ -7,10 +7,9 @@ comments: false
 
 
 During our pair-(learning/programming) session for the [KEP 4595](https://github.com/kubernetes/enhancements/issues/4595) (CEL for CRD AdditionalPrinterColumns) today, [Sreeram Venkitesh](https://sreeram.xyz/) and I, we came across this article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure).  
-It's an old article from 2019 (written by By Dr. Stefan Schimanski) [2] but it was a turning point for me.  
+(It's an old article from 2019 written by Dr. Stefan Schimanski [2]. I will check if & what anything changed, but still reading this article in its current state, itself, was a turning point for me w.r.t my understanding of CRD(s).)
 
-For the first time today, I really learnt and understood - what is `structual schema`.  
-(something that I keep reading about and keep seeing it refereneced everywhere within the kubernetes codebase, over and over again.)
+For the first time today, I truly learnt and understood - what is `structual schema` (something that I keep reading about and keep finding it refereneced everywhere within the kubernetes codebase, over and over again.)
 
 So, Today I learnt (TIL) [1]:
 
