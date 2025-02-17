@@ -126,7 +126,7 @@ Pruning in `apiextensions.k8s.io/v1beta1` is enabled via:
 
 [1] This's just me rephrasing, all what I learnt from and is mentioned in the original article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure) 
 [2] well, while searching for links to add as hyperlink for Dr. Stefan Schimanski, I came across more articles written by him, so, those are for my ToDos now.  
-    - [Kubernetes Deep Dive: Code Generation for CustomResources](https://www.redhat.com/en/blog/kubernetes-deep-dive-code-generation-customresources)
-    - [Kubernetes deep dive: API Server - part 1](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-1)
-    - [Kubernetes Deep Dive: API Server – Part 2](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2)
-    - [Kubernetes Deep Dive: API Server – Part 3a](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2)
+- [Kubernetes Deep Dive: Code Generation for CustomResources](https://www.redhat.com/en/blog/kubernetes-deep-dive-code-generation-customresources)
+- [Kubernetes deep dive: API Server - part 1](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-1)
+- [Kubernetes Deep Dive: API Server – Part 2](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2)
+- [Kubernetes Deep Dive: API Server – Part 3a](https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2)
