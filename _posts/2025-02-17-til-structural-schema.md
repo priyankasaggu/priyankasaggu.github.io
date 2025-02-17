@@ -35,7 +35,7 @@ _**An OpenAPI v3 schema is a Structual Schema, if:**_
 
 ---
 
-Example of a structual schema (understand below as a snippet from a CRD definition file, in the CRD `schema` field):
+**Example of a structual schema** (understand below as a snippet from a CRD definition file, in the CRD `schema` field):  
 
   ```
   type: object
@@ -67,7 +67,8 @@ This schema is structural:
 
 ---
 
-Example of a non-structural schema (understand below as a snippet from a CRD definition file, in the CRD `schema` field):
+**Example of a non-structural schema** (understand below as a snippet from a CRD definition file, in the CRD `schema` field):  
+  
   ```
   properties:
     spec:
@@ -105,6 +106,8 @@ This spec is non-structural for many reasons:
 - inside of `not` the property `privileged` is mentioned, but it is not specified in the core (Rule 3-ii).
 
 
+---
+
 The non-structural schema, highlighted a big problem (before we had structural schema in place), that is - if we can't use `not` to indicate the Kubernetes API server to drop the `privileged` field, then it will be forever preserved by the API server in Etcd.
 
 This was fixed by **Pruning**. (which is not on by default in `apiextensions.k8s.io/v1` but had to be explicitly enabled in `apiextensions.k8s.io/v1beta1`).
@@ -120,10 +123,11 @@ Pruning in apiextensions.k8s.io/v1beta1 is enabled via:
   ```
 
 --- 
+---
 
-[1] This's just me rephrasing, all what I learnt from and is mentioned in the original article – https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure
-[2] well, while searching for links to add as hyperlink for Dr. Stefan Schimanski, I came across more articles written by him, so, those are for my ToDos now.
-      - https://www.redhat.com/en/blog/kubernetes-deep-dive-code-generation-customresources
-      - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-1
-      - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2
-      - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-3a
+[1] This's just me rephrasing, all what I learnt from and is mentioned in the original article – https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure  
+[2] well, while searching for links to add as hyperlink for Dr. Stefan Schimanski, I came across more articles written by him, so, those are for my ToDos now.  
+    - https://www.redhat.com/en/blog/kubernetes-deep-dive-code-generation-customresources
+    - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-1
+    - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-2
+    - https://www.redhat.com/en/blog/kubernetes-deep-dive-api-server-part-3a
