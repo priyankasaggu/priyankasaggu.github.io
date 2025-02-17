@@ -112,7 +112,7 @@ The non-structural schema, highlighted a big problem (before we had structural s
 
 This was fixed by **Pruning**. (which is not on by default in `apiextensions.k8s.io/v1` but had to be explicitly enabled in `apiextensions.k8s.io/v1beta1`).
 
-Pruning in apiextensions.k8s.io/v1beta1 is enabled via:
+Pruning in `apiextensions.k8s.io/v1beta1` is enabled via:
 
   ```
   apiVersion: apiextensions/v1beta1
