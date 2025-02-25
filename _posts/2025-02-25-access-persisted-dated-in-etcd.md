@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "TIL: how to access data persisted in Etcd with etcdctl and kubectl"
+title: "Access data persisted in Etcd with etcdctl and kubectl"
 tags: [kubernetes]
 comments: false
 ---
 
-Let's take for example, I created the following CRD (Custom Resource Definition) with — `kubectl apply -f crd-with-x-validations.yaml`:
+I created the following CRD (Custom Resource Definition) with — `kubectl apply -f crd-with-x-validations.yaml`:
 
 ``` 
 apiVersion: apiextensions.k8s.io/v1
@@ -45,7 +45,9 @@ spec:
 ```
 
 
-I want to check if and how the data is persisted in Etcd. I have two ways to do the job:
+I want to check how the above CRD is persisted in Etcd.
+
+I have two ways to do the job:
 
 #### Option 1:
 
@@ -73,14 +75,13 @@ Use `kubectl` to access the persisted data from Etcd –
 
 `kubectl get --raw /apis/apiextensions.k8s.io/v1/customresourcedefinitions/shirts.stable.example.com`
 
-
-
 ```
 > kubectl get --raw /apis/apiextensions.k8s.io/v1/customresourcedefinitions/shirts.stable.example.com
 
 {"kind":"CustomResourceDefinition","apiVersion":"apiextensions.k8s.io/v1","metadata":{"name":"shirts.stable.example.com","uid":"09696eb0-d58b-4a21-8820-b2230b13707e","resourceVersion":"594","generation":1,"creationTimestamp":"2025-02-21T12:38:19Z","annotations":{"kubectl.kubernetes.io/last-applied-configuration":"{\"apiVersion\":\"apiextensions.k8s.io/v1\",\"kind\":\"CustomResourceDefinition\",\"metadata\":{\"annotations\":{},\"name\":\"shirts.stable.example.com\"},\"spec\":{\"group\":\"stable.example.com\",\"names\":{\"kind\":\"Shirt\",\"plural\":\"shirts\",\"shortNames\":[\"shrt\"],\"singular\":\"shirt\"},\"scope\":\"Namespaced\",\"versions\":[{\"additionalPrinterColumns\":[{\"jsonPath\":\".spec.color\",\"name\":\"Fruit\",\"type\":\"string\"}],\"name\":\"v1\",\"schema\":{\"openAPIV3Schema\":{\"properties\":{\"spec\":{\"properties\":{\"color\":{\"type\":\"string\"},\"size\":{\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}},\"served\":true,\"storage\":true}]}}\n"},"managedFields":[{"manager":"kube-apiserver","operation":"Update","apiVersion":"apiextensions.k8s.io/v1","time":"2025-02-21T12:38:19Z","fieldsType":"FieldsV1","fieldsV1":{"f:status":{"f:acceptedNames":{"f:kind":{},"f:listKind":{},"f:plural":{},"f:shortNames":{},"f:singular":{}},"f:conditions":{"k:{\"type\":\"Established\"}":{".":{},"f:lastTransitionTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}},"k:{\"type\":\"NamesAccepted\"}":{".":{},"f:lastTransitionTime":{},"f:message":{},"f:reason":{},"f:status":{},"f:type":{}}}}},"subresource":"status"},{"manager":"kubectl-client-side-apply","operation":"Update","apiVersion":"apiextensions.k8s.io/v1","time":"2025-02-21T12:38:19Z","fieldsType":"FieldsV1","fieldsV1":{"f:metadata":{"f:annotations":{".":{},"f:kubectl.kubernetes.io/last-applied-configuration":{}}},"f:spec":{"f:conversion":{".":{},"f:strategy":{}},"f:group":{},"f:names":{"f:kind":{},"f:listKind":{},"f:plural":{},"f:shortNames":{},"f:singular":{}},"f:scope":{},"f:versions":{}}}}]},"spec":{"group":"stable.example.com","names":{"plural":"shirts","singular":"shirt","shortNames":["shrt"],"kind":"Shirt","listKind":"ShirtList"},"scope":"Namespaced","versions":[{"name":"v1","served":true,"storage":true,"schema":{"openAPIV3Schema":{"type":"object","properties":{"spec":{"type":"object","properties":{"color":{"type":"string"},"size":{"type":"string"}}}}}},"additionalPrinterColumns":[{"name":"Fruit","type":"string","jsonPath":".spec.color"}]}],"conversion":{"strategy":"None"}},"status":{"conditions":[{"type":"NamesAccepted","status":"True","lastTransitionTime":"2025-02-21T12:38:19Z","reason":"NoConflicts","message":"no conflicts found"},{"type":"Established","status":"True","lastTransitionTime":"2025-02-21T12:38:19Z","reason":"InitialNamesAccepted","message":"the initial names have been accepted"}],"acceptedNames":{"plural":"shirts","singular":"shirt","shortNames":["shrt"],"kind":"Shirt","listKind":"ShirtList"},"storedVersions":["v1"]}}
 ```
 
+---
 ---
 
 
