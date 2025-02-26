@@ -6,22 +6,18 @@ comments: false
 ---
 
 
-How to also include the `.git`[^1] directory in the output tarball created by the `tar_scm` obs service module.
+How to also include the `.git`[^1] directory in the output tarball created by the `tar_scm` OBS (OpenSUSE Build Service) service module?
 
-Use the service parameter, called [package-meta](https://github.com/openSUSE/obs-service-tar_scm/blob/b49251606834eda4ccc84d93d68917617eef254f/tar_scm.service.in#L167-L170).
+Use the service parameter – [package-meta](https://github.com/openSUSE/obs-service-tar_scm/blob/b49251606834eda4ccc84d93d68917617eef254f/tar_scm.service.in#L167-L170).
 
-```
-  <parameter name="package-meta">
-    <description>Package the metadata of SCM to allow the user or OBS to update after un-tar. Please be aware that this parameter has precedence over the "exclude" paramter.</description>
-    <allowedvalue>yes</allowedvalue>
-  </parameter>
-```
+  ```
+    <parameter name="package-meta">
+      <description>Package the metadata of SCM to allow the user or OBS to update after un-tar. Please be aware that this parameter has precedence over the "exclude" paramter.</description>
+      <allowedvalue>yes</allowedvalue>
+    </parameter>
+  ```
 
-Following is an OBS (OpenSUSE Build Service) `_service` file, where I needed it.
-It containers three obs service modules:
-- `tar_scm`[^2]: to clone a github repo (in this case, its a repo containing source a golang project), and then compress the cloned source code directory to a tarball (*.tar)
-- `recompress`[^3]: recompress the above `*.tar`tarball to `*.tar.gz`
-- `go_modules`[^4]: find the above source tarball, untar and cd into it, and run in sequence - `go mod download && go mod verify && go mod vendor` and give back a tarball `vendor.tar.gz` with compressed content from `vendor/` directory containing the vendored go module dependencies needed by the go project.
+Following is an example of an OBS `_service` file (where I needed to use the above parameter):
 
 ```
 <services>
@@ -42,6 +38,12 @@ It containers three obs service modules:
   </service>
 </services>
 ```
+
+The `_service` file contains three OBS service modules:
+- `tar_scm`[^2]: to clone a github repo (in this case, it's cloning the etcd repo code on tag v3.5.16), and then compress the cloned source code directory to a tarball (*.tar).
+- `recompress`[^3]: recompress the above `*.tar`tarball to `*.tar.gz`
+- `go_modules`[^4]: find the above source tarball, untar and cd into it, and run in sequence - `go mod download && go mod verify && go mod vendor` and give back a tarball `vendor.tar.gz` with compressed content from `vendor/` directory containing the vendored go module dependencies needed by the go project.
+
 
 [^1]: `.git` – the directory containing the metadata and object database of the git repository
 [^2]: source: [tar_scm](https://github.com/openSUSE/obs-service-tar_scm) 
