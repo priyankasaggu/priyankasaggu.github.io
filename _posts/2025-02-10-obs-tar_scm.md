@@ -44,6 +44,7 @@ The `_service` file contains three OBS service modules:
 - `recompress`[^3]: recompress the above `*.tar`tarball to `*.tar.gz`
 - `go_modules`[^4]: find the above source tarball, untar and cd into it, and run in sequence - `go mod download && go mod verify && go mod vendor` and give back a tarball `vendor.tar.gz` with compressed content from `vendor/` directory containing the vendored go module dependencies needed by the go project.
 
+---
 
 [^1]: `.git` – the directory containing the metadata and object database of the git repository
 [^2]: source: [tar_scm](https://github.com/openSUSE/obs-service-tar_scm) 
