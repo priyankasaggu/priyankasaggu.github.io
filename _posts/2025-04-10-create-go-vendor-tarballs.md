@@ -22,7 +22,7 @@ The README also provides a few usage examples for packagers.
 
 However, it wasn’t immediately clear how to use the `go_modules` OBS service to create **multiple vendor tarballs** from **different subdirectories** within a single Git source repository.
 
-Below is an example where I create multiple vendor tarballs from a single Git repo—specifically the etcd project:
+Below is an example where I create multiple vendor tarballs from a single Git repo— (in this case, the etcd project):
 
 ```xml
 <services>
