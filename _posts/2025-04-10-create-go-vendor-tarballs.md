@@ -60,6 +60,7 @@ Below is an example where I create multiple vendor tarballs from a single Git re
 </services>
 ```
 
+```
 ┌──────────────────────────────┐
 │  Git Repo: github.com/etcd  │
 └────────────┬────────────────┘
@@ -79,7 +80,7 @@ Service #2     Service #3                        Service #4
  │           │                             │
  ▼           ▼                             ▼
 vendor.tar.gz  vendor-server.tar.gz   vendor-etcdctl.tar.gz
-
+```
 
 
 
