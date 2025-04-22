@@ -61,17 +61,7 @@ Below is an example where I create multiple vendor tarballs from a single Git re
 ```
 
 
-```mermaid
-graph TD
-    A["Git Repo: github.com/etcd"] --> B["Service #1 (obs_scm)"]
-    B --> C["Clones repo, creates etcd.obscpio"]
-    B --> D["Service #2 (go_modules root)"]
-    B --> E["Service #3 (go_modules subdir=server)"]
-    B --> F["Service #4 (go_modules subdir=etcdctl)"]
-    D --> G["vendor.tar.gz"]
-    E --> H["vendor-server.tar.gz"]
-    F --> I["vendor-etcdctl.tar.gz"]
-```
+![image](https://github.com/user-attachments/assets/83d0879d-dc27-4207-a08c-cc74e1d0286f)
 
 
 
