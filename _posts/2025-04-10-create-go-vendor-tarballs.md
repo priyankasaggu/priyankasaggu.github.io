@@ -60,28 +60,6 @@ Below is an example where I create multiple vendor tarballs from a single Git re
 </services>
 ```
 
-```
-┌──────────────────────────────┐
-│  Git Repo: github.com/etcd  │
-└────────────┬────────────────┘
-             │
-             ▼
-┌──────────────────────────────┐
-│ Service #1 (obs_scm)         │
-│ → Clones repo, creates       │
-│   etcd.obscpio               │
-└────────────┬────────────────┘
-             │
- ┌───────────┼─────────────────────────────┐
- │           │                             │
- ▼           ▼                             ▼
-Service #2     Service #3                        Service #4
-(go_modules root)  (go_modules subdir=server)  (go_modules subdir=etcdctl)
- │           │                             │
- ▼           ▼                             ▼
-vendor.tar.gz  vendor-server.tar.gz   vendor-etcdctl.tar.gz
-```
-
 
 ```mermaid
 graph TD
