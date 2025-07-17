@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "TIL: what is structual schema, and how to drop unknown fields in a custom resource (CR)"
+title: "TIL: what is structural schema, and how to drop unknown fields in a custom resource (CR)"
 tags: [kubernetes]
 comments: false
 ---
@@ -9,11 +9,11 @@ comments: false
 Today, during our pair-(learning/programming) session for the [KEP 4595](https://github.com/kubernetes/enhancements/issues/4595) aka, CEL for CRD AdditionalPrinterColumns, [Sreeram](https://sreeram.xyz/) and I, came across this article – [Future of CRDs: Structural Schemas](https://kubernetes.io/blog/2019/06/20/crd-structural-schema/#towards-complete-knowledge-of-the-data-structure).  
 (It's an old article from 2019, written by Dr. Stefan Schimanski[^2]. I will check if & what anything changed since 2019, but still reading this article in its current state, itself, was a turning point for me w.r.t my understanding of CRD(s).)
 
-For the first time today, I understood - what is `structual schema` (something that I keep reading about and keep finding it refereneced everywhere within the kubernetes codebase, over and over again.)
+For the first time today, I understood - what is `structural schema` (something that I keep reading about and keep finding it refereneced everywhere within the kubernetes codebase, over and over again.)
 
 So, **T**oday **I** **L**earnt (TIL)[^1]:
 
-_**An OpenAPI v3 schema is a Structual Schema, if:**_
+_**An OpenAPI v3 schema is a Structural Schema, if:**_
 
 1. the core of an OpenAPI v3 schema, is made out of the following 7 constructs:
     - `properties`
@@ -34,7 +34,7 @@ _**An OpenAPI v3 schema is a Structual Schema, if:**_
 
 ---
 
-**Example of a structual schema** (understand below as a snippet from a CRD definition file, in the CRD `schema` field):  
+**Example of a structural schema** (understand below as a snippet from a CRD definition file, in the CRD `schema` field):  
 
   ```
   type: object
