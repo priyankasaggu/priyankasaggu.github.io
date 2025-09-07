@@ -15,6 +15,84 @@ heading: ""
 
 ## Talks
 
+#### 2025
+
+- _**Redefining Inclusion: Building Truly Global Cloud Native Communities — KubeCon + CloudNativeCon, India 2025**_
+
+  ([schedule](https://kccncind2025.sched.com/event/23Eui/redefining-inclusion-building-truly-global-cloud-native-communities-josh-berkus-red-hat-sandeep-kanabar-gen-formerly-nortonlifelock-priyanka-saggu-suse?iframe=no))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/TqRM3Uxn0VU?si=U25nuuDNTdHeKAkn" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**A Field Guide To Integrating CEL in the Kubernetes Codebase — Maintainer Summit, Europe 2025**_
+
+  ([schedule](https://maintainersummiteu2025.sched.com/event/1uSNP/a-field-guide-to-integrating-cel-in-the-kubernetes-codebase-sreeram-venkitesh-digitalocean-priyanka-saggu-suse))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/ODI3KwDLKas?si=eLlOsLxddb0x-DLp" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Learning Kubernetes Through the Lens of Metrics — KubeCon + CloudNativeCon, Europe 2025**_
+
+  ([schedule](https://kccnceu2025.sched.com/event/1txG2/learning-kubernetes-through-the-lens-of-metrics-priyanka-saggu-suse-mario-jason-braganza-janusworx))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/95NNuV-SUdg?si=pLD75ZSJwozHvn9R" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Contributing To Kubernetes in Its Second Decade - How ContribEx Enhances the Journey! — KubeCon + CloudNativeCon, Europe 2025**_
+
+  ([schedule](https://kccnceu2025.sched.com/event/1td1K/contributing-to-kubernetes-in-its-second-decade-how-contribex-enhances-the-journey-nabarun-pal-independent-mario-fahlandt-kubermatic-madhav-jivrajani-uiuc-priyanka-saggu-suse))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/ksKOPx99rIE?si=hnreGhwWmLE2wwTX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+
+#### 2024
+
+- _**Keynote: Unity in Diversity: Making Cloud Native Ubiquitous - Panel — KubeCon + CloudNativeCon, India 2024**_
+
+  ([schedule](https://kccncind2024.sched.com/event/1r7T6))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/zJ5XLkWifkA?si=XdLe2cPxv7O15joP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Fantastic KEPs and Where to Find Them: A Guide to Kubernetes Enhancements! — KubeCon + CloudNativeCon, India 2024**_
+
+  ([schedule](https://kccncind2024.sched.com/event/1mVS3/fantastic-keps-and-where-to-find-them-a-guide-to-kubernetes-enhancements-priyanka-saggu-suse-mario-jason-braganza-janusworx))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/O7G8Y5O15Ag?si=Krl8OUAj6vSS6_Tb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Contributing to Kubernetes in Its Second Decade - How ContribEx Enhances the Journey! - Panel — KubeCon + CloudNativeCon, India 2024**_
+
+  ([schedule](https://kccncind2024.sched.com/event/1mpDm/contributing-to-kubernetes-in-its-second-decade-how-contribex-enhances-the-journey-nabarun-pal-broadcom-arvind-parekh-independent-sandeep-kanabar-gen-priyanka-saggu-suse))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/HzuuRwvaU90?si=_BTWjaV2Ne2eSTbw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Welcome + Opening Remarks — Maintainer Summit, India 2024**_
+
+  ([schedule](https://maintainersummitindia2024.sched.com/event/1rlvx/welcome-+-opening-bob-killen-nabarun-pal-priyanka-saggu))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/nlL9xppFLbo?si=27by25-oK8ioDHwb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+- _**Peribolos GitHub Management Amidst Growth in Kubernetes Project — Kubernetes Contributor Summit, Europe 2024**_
+
+  ([schedule](https://kcseu2024.sched.com/event/1aOpr))
+
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/UNRk3MJVjTk?si=xSeL0Wthqs4nIOXB" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<hr style='margin-left: auto; margin-right: auto; margin-bottom: 40px; margin-top: 50px; width:100px; border: none; background-color:rgb(238, 238, 238); color: rgb(238, 238, 238);  height: 1px;'/>
+
+
 #### 2023
 
 - _**Keynote – Kubernetes Project Updates (SIG Contributor Experience) — KubeCon + CloudNativeCon, North America 2023**_
