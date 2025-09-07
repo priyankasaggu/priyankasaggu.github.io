@@ -13,19 +13,28 @@ title: About
 <sub>Prior to that, I was part of the Global Cloud Services SRE team at Red Hat.</sub>
 
 <sub>Besides my work, I'm actively involved in the upstream Kubernetes community.</sub>  
-<sub>I've contributed to various parts of the project through SIGs — Release, Testing, ContribEx, and CLI.</sub>  
-<sub>Currenly, I'm a Technical Lead for the Kubernetes Special Interest Group - Contributor Experience (SIG ContribEx).</sub>  
-<sub>I was also one of the Release Lead Shadows for Kubernetes v1.27 & v1.26 release cycles, Enhancement Lead for v1.25 release cycle and have been on the Release Team since v1.23.</sub>
+<sub>I've contributed to various parts of the project through SIGs — Release, Testing, ContribEx, and API Machinery.</sub>  
+<sub>Currenly, I'm a Technical Lead for the Kubernetes Special Interest Group - Contributor Experience (SIG ContribEx), and a GitHub Admin for the Kubernetes Org.</sub>  
+<sub>I am a long-time member of the Kubernetes Release Team (v1.23–v1.31), having notably served as the Release Lead for _**[Kubernetes 1.29 (Mandala)](https://psaggu.com/2025/02/13/kubernetes-1-29-14.html)**_ and as the Emeritus Advisor for Kubernetes 1.31.</sub>
+
+<sub>I've been awarded the annual [CNCF Community award, 2024][CNCF Community award, 2024] (Chop Wood, Carry Water), [Kubernetes community award, 2023][Kubernetes community award, 2023] (SIG Architecture), [Google Open Source Peer Bonus award, 2023][Google Open Source Peer Bonus award, 2023] for my work in Kubernetes.</sub>  
 
 <sub>I am a past Outreachy intern (_Dec'2019 - March' 2020_), under the GNOME Foundation.</sub>  
 <sub>I've written about ***[my journey here](https://www.psaggu.com/outreachy.html)***.</sub>
 
-<sub>I like to talk about — opensource community values, mentoring, on/offline communication guidelines, benefits of writing & documenting things, and more..*</sub>  
-<sub>And I'm ***very*** keen to learn about — Hardware, Networking (both computer and people networking 😉 ), and _(all things having wires, & circuits & LEDs, & ICs in them. Well, I don't know much in this space, and I want to learn more)_.</sub>
-
 <sub>I also started to speak at conferences in past years.</sub>  
-<sub>I've presented talks at ***[KubeCon EU - 2023](https://youtu.be/gKKfXTZd7VU)***, ***[openSUSE Conference - 2023](https://youtu.be/Fqvy30A07_U)***, ***[Open Source Summit - EU - 2022](https://youtu.be/uuaCygXJfE4)***, ***[GNOME Users and Developers European Conference 2020](https://youtu.be/OVUGw5Svn5s?si=oNRfifwwolO8Q6rC)***.</sub>  
-<sub>I was also invited to be part of a CNCF Maintainers Panel Discussion at _**[Kubernetes Community Days, Bengaluru 2023](https://youtu.be/umTnFlP3FrY?si=fsEAPbpvhyFDM3Kd)**_.</sub>
+<sub>I've presented talks at ***[KubeCon EU](https://youtu.be/gKKfXTZd7VU)***, ***[KubeCon NA](https://youtu.be/i7RCoEjAMOo)***, ***[KubeCon IN](https://youtu.be/O7G8Y5O15Ag)***, ***[openSUSE Conference](https://youtu.be/Fqvy30A07_U)***, ***[Open Source Summit - EU](https://youtu.be/uuaCygXJfE4)***, ***[GNOME Users and Developers European Conference (GUADEC)](https://youtu.be/OVUGw5Svn5s?si=oNRfifwwolO8Q6rC)***.</sub>  
+<sub>I was honored to participate as a keynote speaker at _**[KubeCon India, 2024](https://www.youtube.com/watch?v=zJ5XLkWifkA)**_.</sub>  
+<sub>I was also invited to be part of a CNCF Maintainers Panel Discussion at _**[Kubernetes Community Days, Bengaluru 2023](https://youtu.be/umTnFlP3FrY?si=fsEAPbpvhyFDM3Kd)**_.</sub>  
+<sub>You can find the complete list of talks, podcasts, media articles, and more _**[here](https://psaggu.com/talks-and-media.html)**_.</sub>  
+
+<sub>I also had the opportunity to co-chair the first ever _**[CNCF Maintainer Summit](https://psaggu.com/2024/12/10/maintainer-summit-india.html)**_.</sub>  
+
+
+
+
+<sub>I like to talk about opensource community values, mentoring, on/offline communication guidelines, benefits of writing & documenting.</sub>  
+<sub>And I'm ***very*** keen to learn about — Hardware, Networking (both computer and people networking 😉 ), and _(all things with wires, & circuits & LEDs, & ICs in them)_.</sub>
 
 <sub>In past, I've also tried my hands at ***[recording podcasts](https://www.youtube.com/watch?v=LnnFjscF4Wc&t=3641s)***.</sub>  
 <sub>_(so, I could talk to, and learn from lots of wonderful people around the world)_</sub>
@@ -35,9 +44,7 @@ title: About
 
 <sub>You could find me at these other places, as well:</sub>  
 <p class="social-icons">
-  <a href="https://twitter.com/_psaggu"><i class="fab fa-twitter fa-2x"></i></a>
   <a href="https://github.com/priyankasaggu11929"><i class="fab fa-github fa-2x"></i></a>
-  <a href="https://gitlab.gnome.org/psaggu"><i class="fab fa-gitlab fa-2x"></i></a>
   <a href="www.linkedin.com/in/psaggu/"><i class="fab fa-linkedin-in fa-2x"></i></a>
 </p>
 
