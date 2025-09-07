@@ -17,7 +17,7 @@ title: About
 <sub>Currenly, I'm a Technical Lead for the Kubernetes Special Interest Group - Contributor Experience (SIG ContribEx), and a GitHub Admin for the Kubernetes Org.</sub>  
 <sub>I am a long-time member of the Kubernetes Release Team (v1.23–v1.31), having notably served as the Release Lead for _**[Kubernetes 1.29 (Mandala)](https://psaggu.com/2025/02/13/kubernetes-1-29-14.html)**_ and as the Emeritus Advisor for Kubernetes 1.31.</sub>
 
-<sub>I've been awarded the annual [CNCF Community award, 2024][CNCF Community award, 2024] (Chop Wood, Carry Water), [Kubernetes community award, 2023][Kubernetes community award, 2023] (SIG Architecture), [Google Open Source Peer Bonus award, 2023][Google Open Source Peer Bonus award, 2023] for my work in Kubernetes.</sub>  
+<sub>I've been awarded the annual _**[CNCF Community award, 2024][[CNCF Community award, 2024](https://www.cncf.io/announcements/2024/11/14/cloud-native-computing-foundation-announces-the-2024-community-awards-winners/)]**_ (Chop Wood, Carry Water), _**[Kubernetes community award, 2023][[Kubernetes community award, 2023](https://www.kubernetes.dev/community/awards/2023/)]**_ (SIG Architecture), _**[Google Open Source Peer Bonus award, 2023](https://opensource.googleblog.com/2023/12/google-open-source-peer-bonus-program-announces-second-group-of-2023-winners.html)]**_ for my work in the Kubernetes project.</sub>  
 
 <sub>I am a past Outreachy intern (_Dec'2019 - March' 2020_), under the GNOME Foundation.</sub>  
 <sub>I've written about ***[my journey here](https://www.psaggu.com/outreachy.html)***.</sub>
@@ -29,9 +29,6 @@ title: About
 <sub>You can find the complete list of talks, podcasts, media articles, and more _**[here](https://psaggu.com/talks-and-media.html)**_.</sub>  
 
 <sub>I also had the opportunity to co-chair the first ever _**[CNCF Maintainer Summit](https://psaggu.com/2024/12/10/maintainer-summit-india.html)**_.</sub>  
-
-
-
 
 <sub>I like to talk about opensource community values, mentoring, on/offline communication guidelines, benefits of writing & documenting.</sub>  
 <sub>And I'm ***very*** keen to learn about — Hardware, Networking (both computer and people networking 😉 ), and _(all things with wires, & circuits & LEDs, & ICs in them)_.</sub>
