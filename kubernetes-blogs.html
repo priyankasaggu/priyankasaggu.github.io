@@ -10,11 +10,11 @@ description: "Posts about my Kubernetes upstream contributions."
     <hr>
      {%  for post in site.tags["kubernetes"] %}
           <li>
-            <h2> <a href=" {{ post.url }}">{{ post.title }}</a> </h2>
+            <h3> <a href=" {{ post.url }}">{{ post.title }}</a> </h3>
             <span>{{ post.date | date: "%B %d, %Y" }}</span></br>
-            <div>{{ post.excerpt | truncatewords:75}} </div> 
+            <!--<div>{{ post.excerpt | truncatewords:75}} </div>--> 
           </li>
-          <p><i><a href="{{ post.url }}">Read more…</a></i></p>
+          <!--<p><i><a href="{{ post.url }}">Read more…</a></i></p>-->
           <hr>
     {% endfor %}
   </ul>
