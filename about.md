@@ -26,7 +26,7 @@ title: About
 <sub>I've presented talks at ***[KubeCon EU](https://youtu.be/gKKfXTZd7VU)***, ***[KubeCon NA](https://youtu.be/i7RCoEjAMOo)***, ***[KubeCon IN](https://youtu.be/O7G8Y5O15Ag)***, ***[openSUSE Conference](https://youtu.be/Fqvy30A07_U)***, ***[Open Source Summit - EU](https://youtu.be/uuaCygXJfE4)***, ***[GNOME Users and Developers European Conference (GUADEC)](https://youtu.be/OVUGw5Svn5s?si=oNRfifwwolO8Q6rC)***.</sub>  
 <sub>I was honored to participate as a keynote speaker at _**[KubeCon India, 2024](https://www.youtube.com/watch?v=zJ5XLkWifkA)**_.</sub>  
 <sub>I was also invited to be part of a CNCF Maintainers Panel Discussion at _**[Kubernetes Community Days, Bengaluru 2023](https://youtu.be/umTnFlP3FrY?si=fsEAPbpvhyFDM3Kd)**_.</sub>  
-<sub>You can find the complete list of talks, podcasts, media articles, and more _**[here](https://psaggu.com/talks-and-media.html)**_.</sub>  
+<sub>You can find my complete list of talks, podcasts, media articles _**[here](https://psaggu.com/talks-and-media.html)**_.</sub>  
 
 <sub>I also had the opportunity to co-chair the first ever _**[CNCF Maintainer Summit](https://psaggu.com/2024/12/10/maintainer-summit-india.html)**_.</sub>  
 
