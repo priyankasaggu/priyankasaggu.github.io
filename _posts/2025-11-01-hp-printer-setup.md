@@ -18,41 +18,42 @@ I followed the following steps today, to make it work again.
   (Because now I am connected to the HP Printer via Ethernet, the router give preference to the HP Printer on the above IP, even though DHCP Server had assigned this IP to another device on my network.)
   
 - I login to my HP Printer configuration page.  
-  I go to "Settings > Network Settings > Wi-Fi".
-  On this menu page, click on "Wi-Fi Settings > Advanced Settings > Network Setup".
-  Go to "SSID" and hit "Search List" and "Refresh".
-  From the drop down, pick the Wi-Fi SSID I want to connect to, at the bottom, pick "Network Key Setup" and put the updated SSID password in there (both in "Network Key" and "Confirm Network Key").
+  I go to "Settings > Network Settings > Wi-Fi".  
+  On this menu page, click on "Wi-Fi Settings > Advanced Settings > Network Setup".  
+  Go to "SSID" and hit "Search List" and "Refresh".  
+  From the drop down, pick the Wi-Fi SSID I want to connect to, at the bottom, pick "Network Key Setup" and put the updated SSID password in there (both in "Network Key" and "Confirm Network Key").  
   Don't forget to hit "Apply".
 
-- Now other thing I have to fix is that the IP address is still assigned by the Router's DHCP server to another device on LAN. 
+- Now other thing I have to fix is that the IP address is still assigned by the Router's DHCP server to another device on LAN.  
   I need to assign a proper IP to my HP Printer outside the range of IPs available to DHCP server to assign to devices dynamically.
   
-- For that, go to the Router admin page, login and go to "Local Network > LAN > IPv4".
-  Then go to the section "DHCP Server" and change "DHCP Start IP Address" and "DHCP End IP Address" respectively to some "192.168.1.a" and "192.168.1.b" and hit "Apply".
-  With this the router will now have IP "192.168.1.a-1" and DHCP server will only be able to assign dynamically IPs to devices within the assigned pool only.
+- For that, go to the Router admin page, login and go to "Local Network > LAN > IPv4".  
+  Then go to the section "DHCP Server" and change "DHCP Start IP Address" and "DHCP End IP Address" respectively to some "192.168.1.a" and "192.168.1.b" and hit "Apply".  
+  With this the router will now have IP "192.168.1.a-1" and DHCP server will only be able to assign dynamically IPs to devices within the assigned pool only.  
   (with this, what I am trying is to limit the pool of IPs available to DHCP server so that I can assign an IP ("192.168.1.b+1") to HP Printer outside the limits of this available DHCP server IP pool manually. So, that the printer IP doesn't conflict with any other device IP assigned by DHCP server.)
   
-- Now login back to the Printer configuration page,  go to "Settings > Network Settings > TCP/IPv4".
-  Here, in the "General" section, pick "Manual" under the "Assign IPv4 Address" option.
-  And manually assign the following - (1) "IPv4 Address: 192.168.1.b+1", (2) "Subnet Mask: 255.255.255.0", and (3) "Gateway Address: 192.168.1.a-1" (should match the router IP address) to HP Printer.
-  And hit "Apply".
-  With this, the HP Printer configuration page itself will reload to the new assigned IP address url (http://192.168.1.b+1)
+- Now login back to the Printer configuration page,  go to "Settings > Network Settings > TCP/IPv4".  
+  Here, in the "General" section, pick "Manual" under the "Assign IPv4 Address" option.  
+  And manually assign the following - (1) "IPv4 Address: 192.168.1.b+1", (2) "Subnet Mask: 255.255.255.0", and (3) "Gateway Address: 192.168.1.a-1" (should match the router IP address) to HP Printer.  
+  And hit "Apply".  
+  With this, the HP Printer configuration page itself will reload to the new assigned IP address url (http://192.168.1.b+1).
   
-- After above steps, I then remove the Ethernet from the HP Printer, restart it.
-  And check if I am still able to access the HP Printer on the assigned IP via Wi-Fi (http://192.168.1.b+1).
+- After above steps, I then remove the Ethernet from the HP Printer, restart it.  
+  And check if I am still able to access the HP Printer on the assigned IP via Wi-Fi (http://192.168.1.b+1).  
   Yes! It worked now!
 
 - Then now I need to test, whether printing works on Wi-Fi.  
   I am on an OpenSUSE Tumbleweed machine.  
-  I go to the "Settings > Printers" page.
-  I have to make sure that my printer is showing up there.
+  I go to the "Settings > Printers" page.  
+  I have to make sure that my printer is showing up there.  
   (It wasn't before, I had to once manually add a printer and pick up the latest available matching model from the available database, but that's not needed after my steps below.)
 
 - Yes, printer shows up. I gave a test print job. Printing on Wi-Fi is working now.
 
-- But Scanning still doesn't work. Neither on Wifi, nor on Ethernet. My system just doesn't detect the scanner on my HP Printer at all.
+- But Scanning still doesn't work. Neither on Wifi, nor on Ethernet.  
+  My system just doesn't detect the scanner on my HP Printer at all.
 
-- Now, I go back to HP Printer configuration page (http://192.168.1.b+1).
+- Now, I go back to HP Printer configuration page (http://192.168.1.b+1).  
   Go to "Settings > Network Settings" and ensure that "AirPrint" and "Bonjour(mDNS)" both are enabled.
 
 - Now, I need to do a few things at the OS level.  
@@ -121,4 +122,5 @@ I followed the following steps today, to make it work again.
 
 - At this point, the "Scan Documents" app should be detecting the scanner on my HP printer (it did!)
 
-- Also, with Avahi working, my OS system "Settings > Printers" also got a HP Printer added automatically with the correct model name etc. (Scanner also, although that doesn't show up as a menu item in the system settings)
+- Also, with Avahi working, my OS system "Settings > Printers" also got a HP Printer added automatically with the correct model name etc.  
+  (Scanner also, although that doesn't show up as a menu item in the system settings.)
