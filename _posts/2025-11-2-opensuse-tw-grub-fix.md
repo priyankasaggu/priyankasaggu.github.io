@@ -21,14 +21,16 @@ And that won't work when I'm travelling (I know, I can get an external dongle or
 So, I tried booting with a live USB stick into a Mint Cinnamon machine, and it was clear, it's not a TW issue. Mint also didn't detect any wireless network - zero, nil, nothing.  
 (Not to say, over last months, when I thought it was a firmware issue, I had tried many things, lots around the `iwlwifi` firmware, but nothing worked. I have been eying many recent upstream kernel bugzillas related to iwlwifi and I was convinced it was a firmwae issue. And it wasn't).  
 
-Now, very fortunately, Lenovo Premium Support just works (for me it did! Twice I contacted them in last 6 months, and both times an engineer visited almost on the next day or in two.)  
-Both times, they replaced the mother board (my work machine is a ThinkPad Workstation and every thing is just stuck on the mother board, so any chip dies and it requires a full system board replacement).
+Now, very fortunately, Lenovo Premium Support just works.  
+(for me it did! Twice I contacted them in last 6 months, and both times an engineer visited almost on the next day or in two, basically as soon as they had the replacement component delivered to them.)  
+Both times, they replaced the mother board.  
+(My work machine is a ThinkPad Workstation and every thing is just stuck on the mother board, so any tiny chip dies and it requires a full system board replacement).
 
 Both times when the mother board was replaced, it's almost a new machine, only with the same old storage.  
-(very very important storage. Because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long time to configure again).  
-I did ran backups before both replacements, but still it's a pain if I have to do a fresh OS reinstallation and setup everything again, in the middle of a work week.
+(Very very important storage. Because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long time to configure again).  
+I did run backups before both replacements, but still it's a pain if I have to do a fresh OS reinstallation and setup everything again, in the middle of a work week.
 
-So, when the system board is replaced, I think it refreshes the BIOS and stuff, and my grub menu no longer sees the TW OS partitions and so it just directly boots into the mighty Windows Blue Screen screaming "the system can't be fixed, and I need to do a fresh install".
+So, when the system board is replaced, I think it refreshes the BIOS, and my grub menu no longer sees the TW OS partitions and so it just directly boots into the mighty Windows Blue Screen screaming "the system can't be fixed, and I need to do a fresh install".
 
 But don't get fooled by that (not immediately, check once).  
 Chances are that the old OS partitions are still there, just not being detected by the Grub Bootloader.  
@@ -44,8 +46,9 @@ I did the following:
   Because remember "the Wi-FI not working on my machine".  
   Well I could have connected to Ethernet but still, the lesson is to have a proper stick ready with an offline image so it should just boot.)
   
-- Now, put it in the machine, go to "Boot Menu" (F10, IIRC), and pick the option to boot from the live USB stick.  
-  It will go to a grub menu. Skip all the immediate "OpenSUSE Tumbleweed installation, etc" menu options.  
+- Now, put it in the machine, go to the "Boot Menu" (F10, IIRC), and pick the option to boot from the live USB stick.  
+  It will go to a grub menu.  
+  Skip all the immediate menu options like "OpenSUSE Tumbleweed installation", etc.  
   Go to "More ..." and then "Rescue System".  
   It will do the usual "loading basic drivers > hardware detection > ask to pick a keyboard layout, et. al" and then give me the "Resuce Login:" prompt.  
   Remember the username is "root" and there is no password.  
