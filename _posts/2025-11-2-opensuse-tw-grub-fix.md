@@ -150,7 +150,8 @@ I did the following:
 
 None of this process is my own making.  
 The whole credit goes to this very useful demo - [KMDTech: How To Fix Grub in OpenSUSE | UEFI](https://youtu.be/6L3i4Zgb8Y8?si=D96jkLbSR1Dzr416). (Thank you!)  
-It worked twice for me without a single hiccup (but if you need to follow, please do it at your own discretion ofcourse, after checking, cross-checking everything you're typing).
+It worked twice for me without a single hiccup.  
+(but if you need to follow, please do it at your own discretion ofcourse, after checking, cross-checking everything you're typing).
   
 
 
