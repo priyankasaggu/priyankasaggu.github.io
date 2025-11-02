@@ -18,28 +18,34 @@ So, I tried booting with a live USB stick into a Mint Cinnamon machine, and it w
 Now, very fortunately, Lenovo Premium Support just works (for me it did! Twice! I contacted them twice in last 6 months, and both times an engineer visited almost on the next day or in two.)  
 Both times, they replaced the mother board (my work machine is a ThinkPad Workstation and every thing is just stuck on the mother board, so any chip dies and it requires a full system board replacement).
 
-Both times when the mother board is replaced - it's almost a new machine, only with the same old storage (very very important storage - because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long to configure again!).  
+Both times when the mother board is replaced, it's almost a new machine, only with the same old storage.  
+(very very important storage. Because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long to configure again).  
 I did ran backups before both replacements, but still it's a pain if I have to do a fresh OS reinstallation and setup everything again, in the middle of a work week.
 
-So, when the board is replaced, I think it refreshes the BIOS and stuff, and my grub menu no longer sees the TW OS partitions and so it just directly boots into the mighty Windows Blue Screen screaming the system can't be fixed, and I need to do a fresh install.
+So, when the system board is replaced, I think it refreshes the BIOS and stuff, and my grub menu no longer sees the TW OS partitions and so it just directly boots into the mighty Windows Blue Screen screaming the system can't be fixed, and I need to do a fresh install.
 
-But don't get fooled by that (not immediately, check once!).  
+But don't get fooled by that (not immediately, check once).  
 Chances are that the old OS partitions are still there, just not being detected by the Grub bootloader.  
 And that was the case for me (both times).
 
-And not to my surprise (well, to my surprise, because let's not forget TW is a rolling release OS, so things can go south very very quickly) the OpenSUSE TW "Rescue System" menu came to my resuce!
+And not to my surprise, the OpenSUSE TW "Rescue System" menu came to my resuce!  
+(well, to my surprise, because let's not forget TW is a rolling release OS. So things _can_ go south very very quickly.) 
 
 I did the following:
 
-- I created a live USB stick with OpenSUSE Tumbleweed  
-  (it helped to have a stick with a full Offline image, and not the tiny Network image - because remember "the Wi-FI" not working on my machine.
-  Well I could have connected to Ethernet but still, the lesson is have a stick ready with an offline image so it should just boot.)
+- I created a live USB stick with OpenSUSE Tumbleweed.  
+  (It helped to have a stick with a full Offline image, and not the tiny Network image which will pull every single thing from Internet.  
+  Because remember "the Wi-FI" not working on my machine.  
+  Well I could have connected to Ethernet but still, the lesson is to have a stick ready with an offline image so it should just boot.)
   
-- Now, put it in the machine, go to "Boot Menu" (F10, IIRC), and pick the option to boot from the Live USB stick.
-  It will go to a grub menu with OpenSUSE Tumbleweed installation option etc. Skip all those, and right away click on "More ..." and then "Rescue System".  
-  It will do the usual "loading basic drivers, hardware detection and ask to pick a keyboard layout, et. al" and then give me the "Resuce Login:" prompt.  
+- Now, put it in the machine, go to "Boot Menu" (F10, IIRC), and pick the option to boot from the Live USB stick.  
+  It will go to a grub menu.  
+  Skip all the immediate "OpenSUSE Tumbleweed installation, etc" menu options.
+  Go to "More ..." and then "Rescue System".  
+  It will do the usual "loading basic drivers > hardware detection > ask to pick a keyboard layout, et. al" and then give me the "Resuce Login:" prompt.  
   Remember the username is "root" and there is no password.  
   With that, I enter `tty1:resuce:/ #`.
+
   Now run the following set of commands:
   
   ```
@@ -69,7 +75,7 @@ I did the following:
   # I need "/dev/nvme0n1p1" (EFI System) and "/dev/nvme0n1p2" (Linux Filesystem)
   
   # I need to mount these two partitions under "/mnt"
-  # (make sure the `/mnt` directory it's empty before mounting anything to it)
+  # (make sure the `/mnt` directory is empty before mounting anything to it)
 
   cd /mnt
   ls  # should be empty
@@ -104,7 +110,7 @@ I did the following:
   # then probe for other operating systems on this machine
   
   os-prober
-  ## should output something like (and because my machine originally came with Windows, it still shows remanents of that)
+  ## should output something like (and because my machine originally came with Windows, it still shows remnants of that)
   /dev/nvme0n1p1@/EFI/Microsoft/Boot/bootmgfw.efi:Windows Boot Manager:Windows:efi
 
   # now, create a new grub configuration file using grub2-mkconfig
@@ -136,10 +142,10 @@ I did the following:
 - Now, restart the machine and it should have a grub menu with proper "OpenSUSE Tumbleweed" boot entry.  
   And it should just boot.  
   Boot and login! It should work now! (It did, twice I followed this process and it did).  
-  (Also, a note, when I reboot into OpenSUSE tumbleweed after this new grub config creation, I need to also make sure "Secure Boot" is disabled in BIOS menu.
+  (Also, a note, when I reboot into OpenSUSE tumbleweed after this new grub config creation on a new system board, I need to also make sure "Secure Boot" is disabled in BIOS menu.  
   Otherwise it will not allow the OpenSUSE TW to boot.  
-  It didn't for me because my Secure Boot was enabled.
-  So, I had to disable it. And then it worked.
+  It didn't for me because my Secure Boot was enabled.  
+  So, I had to disable it. And then it worked.  
   After first successful boot, I think I can enable it again.)
 
 None of this process is my own making.  
