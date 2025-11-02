@@ -18,7 +18,7 @@ So, I tried booting with a live USB stick into a Mint Cinnamon machine, and it w
 Now, very fortunately, Lenovo Premium Support just works (for me it did! Twice! I contacted them twice in last 6 months, and both times an engineer visited almost on the next day or in two.)  
 Both times, they replaced the mother board (my work machine is a ThinkPad Workstation and every thing is just stuck on the mother board, so any chip dies and it requires a full system board replacement).
 
-Both times when the mother board is replaced - it's almost a new machine, only with the same old storage (very very important storage - because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long to configure again!).
+Both times when the mother board is replaced - it's almost a new machine, only with the same old storage (very very important storage - because it still contains my old TW OS partitions and data, and all the precious system configurations which takes a very long to configure again!).  
 I did ran backups before both replacements, but still it's a pain if I have to do a fresh OS reinstallation and setup everything again, in the middle of a work week.
 
 So, when the board is replaced, I think it refreshes the BIOS and stuff, and my grub menu no longer sees the TW OS partitions and so it just directly boots into the mighty Windows Blue Screen screaming the system can't be fixed, and I need to do a fresh install.
