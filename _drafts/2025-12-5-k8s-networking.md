@@ -3,7 +3,6 @@ layout: post
 title: "Networking, and Kubernetes Networking!"
 tags: [personal]
 comments: false
-dr
 ---
 
 This week was a Hack Week (2025 edition) at work (thanks to my employer, SUSE).
