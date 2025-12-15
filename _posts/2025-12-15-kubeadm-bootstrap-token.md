@@ -952,6 +952,39 @@ So, the bootstrap token is only a bridge, and not an identity, to reach to a poi
 
 And once the certificate exists on the new node, the bootstrap token is no longer relevant.
 
+
+---
+
+I'm also keeping this quick diagram for me to keep referring to:
+
+
+```pgsql
+New node
+  │
+  │ kubeadm join
+  │
+  ▼
+API Server (unauthenticated)
+  │
+  │ token-based auth
+  ▼
+CSR created
+  │
+  │ CertificateSigningRequest
+  ▼
+Controller approves CSR
+  │
+  │ signed by CA
+  ▼
+kubelet gets client cert
+  │
+  │ mTLS from now on
+  ▼
+FULLY TRUSTED NODE
+```
+
+
+---
 ---
 
 PS: Even though the node was able to join the control-plane, but it wasn't really in a `READY` state (and I left it there, didn't troubleshoot it further).   
