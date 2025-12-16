@@ -5,7 +5,7 @@ tags: [personal]
 comments: false
 ---
 
-_(This blog are my notes as I read and try to understand the thesis paper, [Usable Access Control in Cloud Management Systems](https://github.com/luxas/research/blob/main/msc_thesis.pdf), written by Lucas Käldström.)_
+_(This blog is basically a set of notes for self, as I read and try to understand the thesis paper, [Usable Access Control in Cloud Management Systems](https://github.com/luxas/research/blob/main/msc_thesis.pdf), written by Lucas Käldström.)_
 
 
 For a good while now, I have been wanting to understand how a node joins a Kubernetes cluster using the `kubeadm join` command.  
@@ -19,9 +19,11 @@ So, things I want to understand are:
 And as I read more and more of the thesis paper (linked at the top), I am understanding that the Access control mechanism(s) (for authentication, and authorization, and admission) used within the Kubernetes clusters are extremly elaborate and thought out from security perspective (and ofcourse, they're not simple at all, not right away at least).  
 So, seeing a simple token passed through the command line in plain text format felt a bit off the place (or too simple right away).
 
-And ofcourse, I have a feeling, that it is not, so, following is me trying to figure out some answers for my questions.
+And ofcourse, I have a feeling, that it is not. So, following is me trying to figure out some answers for my questions.
 
 ---
+
+### Q: What is the role of a kubeadm bootstrap token?
 
 I created a simple Kind cluster, and looked for anything "bootstrap" related on the `kube-apiserver-*` pod.
 
@@ -36,7 +38,7 @@ I created a simple Kind cluster, and looked for anything "bootstrap" related on 
 I got a flag in the output, `--enable-bootstrap-token-auth=true`.  
 And I don't know what this flag actually does.
 
-So, below I'm trying to create a simple docker container with the `kube-apiserver` image and look at the `kube-apiserver --help` menu for the definition of the flag.
+Now, let's create a simple docker container with the `kube-apiserver` image and look at the `kube-apiserver --help` menu to get the definition of the flag.
 
 ```bash
 ❯ kubectl get pod kube-apiserver-kind-control-plane -n kube-system -o yaml | grep "image:"
@@ -52,7 +54,7 @@ In simple words, how I understand it as:
 
 - If I set the flag `--enable-bootstrap-token-auth` to `True`, then the API server is configured to trust a list of (kubeadm) bootstrap tokens.
 - These tokens needs to be stored as a `Secret` object (of a very specific type - `bootstrap.kubernetes.io/token`)  in the `kube-system` namespace.
-- and once that is done, then if a joining node (actually, the kubelet running on the joining node) makes a "TLS bootstrapping authentication" request using the "bootstrap token" in the request header (`Authorization: Bearer <token>`), then the request is authenticated.
+- and once that is done, then if a joining node (actually, the kubelet running on the joining node) makes a "TLS bootstrapping authentication" request using the "bootstrap token" in the request header (`Authorization: Bearer <token>`), then the request will be authenticated.
 
 So, we have some information now about the kubeadm bootstrap token.
 
@@ -79,21 +81,22 @@ You can read more about bootstrap tokens here:
   https://kubernetes.io/docs/admin/bootstrap-tokens/
 ```
 
-Also, the link at the bottom doesn't work anymore. Correct one (atleast as of writing) is - [https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-token/](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-token/).
+Also, the link at the bottom doesn't work anymore.  
+Correct one (atleast as of writing) is - [kubeadm token](https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-token/).
 
 
-So, at this point we have a verbal answer for this question - `what is the role of the kubeadm token?`.
+So, at this point we have a verbal answer for the question - `what is the role of the kubeadm token?`.
 
-Next, I want to try is to create a manual kubeamd token (and now, from the `kubeadm --help` output, I also know what is going to be the format of a valid kubeadm token).
+Next, I want to try is to create a manual kubeadm token (and now, from the `kubeadm --help` output, I also know what is the format of a valid kubeadm token).
 
 ---
 
 I am continuing on the Kind cluster we created above.  
 
 The control-plane node (docker container) was created with the IP address - `172.18.0.2`.  
-(leaving it here as a note, because we will use it later. And this is the future me talking, I didn't know it as I was trying things ofcourse)
+(leaving it here as a note, because we will use it later. And this is the future me talking, I didn't know it as I was trying things.)
 
-And to simulate a new node, I didn’t use kind’s built-in multi-node support.  
+To simulate a new node, I didn’t use kind’s built-in multi-node support.  
 Instead, I created a plain docker container on the same network (the docker bridge network with the name, `kind`):
 
 ```bash
@@ -107,12 +110,15 @@ CONTAINER ID   IMAGE                  COMMAND                  CREATED          
 83ab08acf723   kindest/node:latest    "/usr/local/bin/entr…"   7 seconds ago       Up 6 seconds                                   joining-node
 ```
 
-This new container as of now, has nothing but the basic tools installed (`kubeadm`, `kubelet`, `kubectl` and a clean filesystem, coming from the `kindest/node` image). So, as of now, no certificates, no kubeconfig.
+This new container has nothing but the basic tools installed (`kubeadm`, `kubelet`, `kubectl` and a clean filesystem, coming from the `kindest/node` image).  
+So, as of now, no certificates, no kubeconfig, nothing.
 
-Also, note the name of the container, `joining-node`.  
+Also note the name of the container, `joining-node`.  
 (I will use it later to exec inside the container and use it as a joining node).
 
 ---
+
+### Q: Can I create a kubeadm token manually and use it to join an existing Kubernetes cluster successfully?
 
 Back to the rules we got earlier:
 
@@ -122,14 +128,13 @@ Back to the rules we got earlier:
    while the latter is the Token Secret and it must be kept private at all circumstances!
 > - The name of the Secret must be named "bootstrap-token-(token-id)".
 
-
 I am creating the following Secret object in the cluster (from the `kind-control-plane` node).  
 Notice the token bits I added in the yaml - `token-id: pqrstu` and `token-secret: abcdef1234567890`.  
 Together, these will give us the full token as `pqrstu.abcdef1234567890`.  
 We will use this to make our `kubeadm join` requests.
 
 To come up with the following template, I referred to existing tokens from other multi-node Kind cluster.  
-(updated later: it is also available here - [Bootstrap Token Secret Format](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#bootstrap-token-secret-format))
+(updated later: the template is also available here - [Bootstrap Token Secret Format](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#bootstrap-token-secret-format))
 
 ```yaml
 # bootstrap-token.yaml
@@ -148,7 +153,7 @@ stringData:
   expiration: "2030-01-01T00:00:00Z"
 ```
 
-Apply it now:
+Apply to create the token secret:
 
 ```bash
 ❯ kubectl apply -f bootstrap-token.yaml
@@ -157,10 +162,10 @@ Apply it now:
 
 NAME                     TYPE                            DATA   AGE
 bootstrap-token-abcdef   bootstrap.kubernetes.io/token   6      58m
+```
 
----
-
-Now let's make some first attempts at joining from the new docker container node (`joining-node`) and see how Kubeadm behaves (I have kept the verbosity of the logs very high).
+Now let's make some first attempts to make the new docker container node (`joining-node`) join the Kind cluster.
+(I have kept the verbosity of the logs very high).
 
 Inside the new node docker container, I started by running `kubeadm join` with no arguments:
 
@@ -175,7 +180,9 @@ error: discovery: Invalid value: "": bootstrapToken or file must be set
 no stack trace
 ```
 
-That failed immediately. Next, let's try to give it the token we created above:
+That failed immediately.  
+
+Next, let's try to give it the token we created above:
 
 ```bash
 root@83ab08acf723:/# kubeadm join pqrstu.abcdef1234567890 --v=9
@@ -184,16 +191,16 @@ error: [discovery.bootstrapToken.caCertHashes: Invalid value: "": using token-ba
 no stack trace
 ```
 
-That produced a more informative error.
+That produced a more informative error logs.  
 Now, we atleast know that kubeadm expects an endpoint to the API server first and then the token (maybe).
 
-Also the logs suggested to pass `--discovery-token-unsafe-skip-ca-verification` flag to continue. Let's do that as well, to make some progress.
+Also the logs suggested us to pass `--discovery-token-unsafe-skip-ca-verification` flag to continue.  
+Let's do that as well, to make some progress.
 
-(and yes, I could have already looked at the `kubeadm --help` menu to understand the required format, but above test runs were intentional to understand things).
+(and yes, I could have already looked at the `kubeadm --help` menu to understand the required format, but above test runs were intentional to understand basic flow).
 
----
 
-Now let's provide everything properly that kubeadm actually needs:
+Ok, let's provide everything properly that kubeadm actually needs:
 
 ```bash
 root@83ab08acf723:/# kubeadm join 172.18.0.2:6443 \
@@ -201,9 +208,9 @@ root@83ab08acf723:/# kubeadm join 172.18.0.2:6443 \
   --discovery-token-unsafe-skip-ca-verification --v=9
 ```
 
-And, this time things moved some futher.  
+This time things moved some further.  
 
-let's look at some important bits of the logs part by part.
+Let's look at some important bits of the logs part by part.
 
 ```bash
 230 token.go:229] [discovery] Waiting for the cluster-info ConfigMap to receive a JWS signature for token ID "pqrstu"
@@ -217,7 +224,7 @@ let's look at some important bits of the logs part by part.
 
 From the above bits, it looks like at this point, we are able to successfully _**authenticate**_ using the manually created token we passed (look at the `status="200 OK"`).
 
-But then after authentication, the API Server refused us to continue futher.
+But then after authentication, the API Server refused to let us continue further.
 
 ```bash
 230 round_trippers.go:527] "Request" curlCommand=<
@@ -236,7 +243,7 @@ in namespace "kube-system"
 
 And we are also able to see where is the problem - `User "system:bootstrap:pqrstu" cannot get resource "configmaps" in namespace "kube-system"`.
 
-So, we now know when we passed the token to the `kubeadm join` command, the API Server sees our request as coming from the user `system:bootstrap:pqrstu`.
+So, we know now when we pass the token to the `kubeadm join` command, the API Server sees our requests as coming from the user `system:bootstrap:pqrstu`.
 
 ok, let's try to fix it now by giving it the required permissions.
 
@@ -245,7 +252,7 @@ We know that kubernetes uses RBAC to configure these kind of permissions on the 
 
 I created a `ClusterRoleBinding` object that allowed the user (`system:bootstrap:pqrstu`) to read cluster configuration.
 
-(AND PLEASE NOTE! This is not something I would do in a real cluster. This is purely just to move forward with this test!)
+_**AND PLEASE NOTE:** _This is not something I would do in a real cluster. This is purely just to move forward with this test!_
 
 ```yaml
 # clusterrolebinding-bootstrap-token.yaml
@@ -284,10 +291,23 @@ root@83ab08acf723:/# kubeadm join 172.18.0.2:6443 \
   --discovery-token-unsafe-skip-ca-verification --v=9
 ```
 
-Voila! This time it worked successfully. The `kubeadm join` ran successfully and retured - `This node has joined the cluster`.
+Voila!  
+This time it worked successfully.  
+The `kubeadm join` ran successfully and retured - `This node has joined the cluster`.
+
+I can confirm it from the Kind cluster's control-plane node as well.  
+I can see this new docker container showing up as a node.
+
+```bash
+❯ kubectl get nodes 
+NAME                 STATUS     ROLES           AGE    VERSION
+83ab08acf723         NotReady   <none>          108s   v1.35.0-alpha.2.488+f35f9509a69cc6
+kind-control-plane   Ready      control-plane   106m   v1.34.0
+```
+
 
 <details markdown="1">
-  <summary>Please see the full logs here. These contain all the requests logged with the token in use in request's headers. (click to expand)</summary>
+  <summary>Please see the full logs here. These contain all the requests showing how and where the Kubeadm token is used, as request's headers. (click to expand)</summary>
 {% raw %}
 ```bash
 root@83ab08acf723:/# kubeadm join 172.18.0.2:6443   --token="pqrstu.abcdef1234567890"   --discovery-token-unsafe-skip-ca-verification --v=9
@@ -862,14 +882,6 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 {% endraw %}
 </details>
 
-On the Kind cluster's control-plane node, I can see this new docker container node showing up:
-
-```bash
-❯ kubectl get nodes 
-NAME                 STATUS     ROLES           AGE    VERSION
-83ab08acf723         NotReady   <none>          108s   v1.35.0-alpha.2.488+f35f9509a69cc6
-kind-control-plane   Ready      control-plane   106m   v1.34.0
-```
 
 So, at this point now.  
 We've answered our second question also.   
@@ -891,6 +903,10 @@ I have more questions now.
 - The Kubelet was informed of the new secure connection details. How?
 
 Let's try to answer them now.
+
+---
+
+### Q: What is the "Certificate signing request"? And what "response" we received?
 
 So, back to the control-plane node, let's check the following:
 
@@ -937,15 +953,16 @@ status:
 ```
 
 From the object definition, I understand that the user `system:bootstrap:pqrstu`, made this CSR request for purposes, `usages: {digital signature, client auth}`.  
-And that is `AutoApproved` (after some process called `SubjectAccessReview` which I am not getting into, in this blog, but I know that is important).
+And that is `AutoApproved` (after some process called `SubjectAccessReview` which I am not exploring in this blog, but I know that is important).
 
 Nice. But what did we receive as response?
 
 I see, we got back a `certificate` and `Approved` (with `status: "True"`) in the CSR object's status section.   
 So, that means the response we got back is the CSR getting approved. (maybe, I'm still not 100% sure about which response we're talking).
 
-ok, next we also saw the part - "Kubelet was informed of the new secure connection details".  
-I want to understand how Kubelet was informed.
+---
+
+### Q: The Kubelet was informed of the new secure connection details. How?
 
 I do see some relevant logs (truncated to just show the relevant bits):
 
@@ -998,13 +1015,14 @@ users:
     client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
 ```
 
-The `certificate-authority-data` field stores the public certificate of Cluster's CA (Which is coming from the control-plane of the cluster).
+The `certificate-authority-data` field stores the public certificate of Cluster's CA (Which is coming from the control-plane of the cluster).  
 If you decode the value (using `echo "LS0tLS1CRUd****LS0tLS0K" | base64 -d`, it will match the contents of the `/etc/kubernetes/pki/ca.crt` on the kind-control-plane node.
 
-We also see it points to the location of the kubelet's certificates & keys - `/var/lib/kubelet/pki/`.
+We also see the `kubelet.conf` file points to the location of the kubelet's certificates & keys - `/var/lib/kubelet/pki/`.
 
-As I understand (from reading docs):
-the kubelet generates its own certificates/keys locally (`/var/lib/kubelet/pki/Kubelet.crt/key`) and then sent the CSR to the API Server.  
+As I understand (from reading docs):  
+
+The kubelet generates its own certificates/keys locally (`/var/lib/kubelet/pki/Kubelet.crt | .key`) and then send a CSR (Certificate Signing Request) to the API Server.  
 The control-plane (controller-manager?) then sign that CSR using the cluster CA keys (which we see from the field - `certificate-authority-data`).  
 And then signed certificate is written into `kubelet.conf` (to be precise here - `/var/lib/kubelet/pki/kubelet-client-current.pem`, which comes from the `status.certificate:` field of the CSR Object).
 
@@ -1021,15 +1039,15 @@ root@fd5e81a7604b:/# tree /var/lib/kubelet/pki/
 1 directory, 4 files
 ```
 
-(Note: The part "kubelet generate a private key and a CSR for submission to a cluster-level certificate signing process." was originally proposed as part of this design proposal - [Kubelet TLS bootstrap](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/kubelet-tls-bootstrap.md))
+(**Note:** The part, "_kubelet generate a private key and a CSR for submission to a cluster-level certificate signing process_" was originally proposed as part of this design proposal - [Kubelet TLS bootstrap](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/kubelet-tls-bootstrap.md))
 
 
 So, after this point onwards, our (`joining-node`) node aka the Kubelet has its own set of signed certificates.  
 And so, the kubeadm bearer token is no longer required.  
-And all further interactions with the control-plane will use these certificates via mTLS.
+And all further interactions with the control-plane will use these certificates via mTLS (mutual TLS).
 
-Also, note that - not just certificates, a lot more stuff was also added to the filesystem of the (`joining-node`) node.  
-I don't know details about every single listed item, but here's the full tree:
+Also, note that - not just certificates, a lot more, was also added to the filesystem of the (`joining-node`) node.  
+I don't understand details about every single listed item, but here's the full tree:
 
 ```bash
 root@0ecd1b55abc8:/# tree /var/lib/kubelet/
@@ -1086,27 +1104,39 @@ root@0ecd1b55abc8:/# tree /var/lib/kubelet/
 25 directories, 24 files
 ```
 
+---
+
+### Q: why there's a symmetric token used by kubeadm?
+
 OK, I already feel I learnt quite a bit.
 
 Yet, our very first question is still not answered.  
 i.e., why there's a symmetric token used by kubeadm?
 
 I was actually having a chat with the creator of Kubeadm himself, Lucas Käldström (yes, the same person who wrote the above linked thesis).  
-What I learnt is - even though it's a symmetric and shared string, the token itself has two parts, where the first part (`token-id`) is supposed to be public and the second part (`token-secret`) is supposed to be private.  
-And as the name suggests the second private part of the token is supposed to be kept private (obviously.)  
+
+What I learnt is - even though it's a symmetric and shared string, the token itself has two parts, where the first part (`token-id`) is supposed to be treated as public entity and the second part (`token-secret`) to be treated as a private entity.  
+
 Becuase, Kubeadm tokens are to be used for establishing bidirectional trust between the client (in our case, `joining-node`) and the server (the control-plane, `api-server`).  
+
 - For the client (`joining-node`) to establish trust to the server (the control-plane, `api-server`), we saw the first part (`token-id`) of the token is used (`system:bootstrap:pqrstu` and the matching secret and clusterrolebinding).  
 - For the server (the control-plane, `api-server`) to establish trust to the client (`joining-node`), the entire shared token (both `token-id` and `token-secret`) can be used.  
 
-  If you look at the full kubeadm join logs again, one of the early steps you will see is - `attempting to download the KubeletConfiguration from ConfigMap "kubelet-config"`.
-  This token (stored as the Secret object in the control-plane aka the server side) can be used to sign the ConfigMap ("kubelet-config") and then on the client side (`joining-node`), the received signed ConfigMap can then be authenticated by using the same shared token.  
-  The process is explained here briefly - [ConfigMap Signing](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#configmap-signing), but the important part is - `You can verify the JWS (signature) using the HS256 scheme (HMAC-SHA256) with the full token (e.g. 07401b.f395accd246ae52d) as the shared secret.`
+  If you look at the full `kubeadm join ...` logs again, one of the early steps you will see is - `attempting to download the KubeletConfiguration from ConfigMap "kubelet-config"`.  
+  
+  This token (stored as the Secret object in the control-plane aka the server side) can be used to sign the ConfigMap ("kubelet-config").
 
-So, even though it's a symmetric and a shared token, but it has similarities to the assymetric key pairs with its public and private parts used for separate purposes.  
-There's also this design proposal called, [bootstrap discovery](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md), which discusses the flow we see in our logs.
+  And then on the client side (`joining-node`), the received signed ConfigMap can then be authenticated by using the same shared token.  
+  
+  The process is explained here briefly - [ConfigMap Signing](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#configmap-signing),  
+  but the important part is - `You can verify the JWS (signature) using the HS256 scheme (HMAC-SHA256) with the full token (e.g. 07401b.f395accd246ae52d) as the shared secret.`
+
+So, even though it's a symmetric and a shared token, but it has similarities to the assymetric key pairs with its public and private entities used for separate purposes.  
+
+There's also this design proposal called, [bootstrap discovery](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md), which discusses and infact proposed the flow we see in our logs.
 
 
-Finally, I will end this post with this diagram which atleast for me, summarises nicely, the process we followed from start to end so far:
+Finally, I will end this post with this diagram which atleast for me, summarises nicely, the entire process we followed from start to end so far:
 
 
 ```pgsql
@@ -1135,12 +1165,16 @@ FULLY TRUSTED NODE
 ```
 
 
-With that, thank you for reading so far. And I hope you also got to learn a few new things. o/
+With that, thank you for reading so far.  
+
+And I hope you also got to learn a few new things. o/
+
 
 ---
----
 
-PS: Even though the node was able to join the control-plane, but it wasn't really in a `READY` state (and I left it there, didn't troubleshoot it further).   
+**PS:**
+
+Even though the node was able to join the control-plane, but it wasn't really in a `READY` state (and I left it there, didn't troubleshoot it further).   
 
 The Kubelet logs read something like:
 
