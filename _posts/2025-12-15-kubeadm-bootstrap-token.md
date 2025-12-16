@@ -236,7 +236,7 @@ This time, kubeadm progressed all the way through:
 <details>
   <summary>Please also see full raw kubeadm logs, it has all the requests logged with the token in use (click to expand)</summary>
 
-```console
+```bash
 root@5a5adbbfec7a:/# kubeadm join 172.18.0.2:6443   --token="pqrstu.abcdef1234567890"   --discovery-token-unsafe-skip-ca-verification --v=9
 I1215 14:50:15.160788     230 join.go:423] [preflight] found NodeName empty; using OS hostname as NodeName
 I1215 14:50:15.161142     230 initconfiguration.go:122] detected and using CRI socket: unix:///var/run/containerd/containerd.sock
