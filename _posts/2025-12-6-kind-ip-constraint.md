@@ -492,6 +492,12 @@ ip-test-worker4         NotReady   <none>          26s   v1.34.0   172.20.0.4   
 
 Done! We have the nodes created with IP addresses assigned from the new custom "kind" network pool.
 
-I know the state of the nodes are `NotReady`, but that's not part of this experiment.
+I know the state of the nodes are `NotReady`, but that's not part of this experiment.  
+(updated later - I know the reason why all nodes stayed in `NotReady` state. Because I only used a kind-config that disabled default CNI setup 🤦‍♀️. Anyway, removing this should fix it.)
+
+```yaml
+networking:
+  disableDefaultCNI: true
+```
 
 Next, I want to try is to see what happens when I constrain "PodCIDR" and "ServiceCIDR" pools. o/
