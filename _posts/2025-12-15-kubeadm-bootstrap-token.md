@@ -580,7 +580,7 @@ failed to mount rootfs component: mount source "overlay" ... err: invalid argume
 ---
 
 
-<details>
+<details markdown="1">
   <summary>Please see the full raw kubeadm logs here. (click to expand)</summary>
 
 ```bash
@@ -1152,5 +1152,5 @@ This node has joined the cluster:
 * The Kubelet was informed of the new secure connection details.
 
 Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
-```
-</details>
+
+</details>```
