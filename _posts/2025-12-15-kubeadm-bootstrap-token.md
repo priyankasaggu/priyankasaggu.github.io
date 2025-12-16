@@ -252,7 +252,7 @@ We know that kubernetes uses RBAC to configure these kind of permissions on the 
 
 I created a `ClusterRoleBinding` object that allowed the user (`system:bootstrap:pqrstu`) to read cluster configuration.
 
-_**AND PLEASE NOTE:** _This is not something I would do in a real cluster. This is purely just to move forward with this test!_
+_**AND PLEASE NOTE:** This is not something I would do in a real cluster. This is purely just to move forward with this test!_
 
 ```yaml
 # clusterrolebinding-bootstrap-token.yaml
