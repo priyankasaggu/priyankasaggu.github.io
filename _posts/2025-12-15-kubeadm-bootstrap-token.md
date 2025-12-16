@@ -286,302 +286,8 @@ root@83ab08acf723:/# kubeadm join 172.18.0.2:6443 \
 
 Voila! This time it worked successfully. The `kubeadm join` ran successfully and retured - `This node has joined the cluster`.
 
-(The full logs are at the bottom of this post. Please please go look at them.
-Those contain all the requests logged with the token in use in request's headers.  
-I will try to bring them back here inline but right now the folding-y thing doesn't work properly.)
-
-On the Kind cluster's control-plane node, I can see this new docker container node showing up:
-
-```bash
-❯ kubectl get nodes 
-NAME                 STATUS     ROLES           AGE    VERSION
-83ab08acf723         NotReady   <none>          108s   v1.35.0-alpha.2.488+f35f9509a69cc6
-kind-control-plane   Ready      control-plane   106m   v1.34.0
-```
-
-So, at this point now.  
-We've answered our second question also.   
-i.e, `can I try to create a kubeadm token manually and use that to join an existing Kubernetes cluster successfully?`.  
-Yes, I can! We saw it above!
-
-But wait, what next now?
-
-We saw the following bit in our output:
-
-```bash
-This node has joined the cluster:
-* Certificate signing request was sent to apiserver and a response was received.
-* The Kubelet was informed of the new secure connection details.
-```
-
-I have more questions now.
-- What is the "Certificate signing request"? And what "response" we received?
-- The Kubelet was informed of the new secure connection details. How?
-
-Let's try to answer them now.
-
-So, back to the control-plane node, let's check the following:
-
-```bash
-❯ kubectl get certificatesigningrequest -A
-
-NAME        AGE     SIGNERNAME                                    REQUESTOR                        REQUESTEDDURATION   CONDITION
-csr-c5j6z   7m46s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:pqrstu          <none>              Approved,Issued
-csr-qzbvk   112m    kubernetes.io/kube-apiserver-client-kubelet   system:node:kind-control-plane   <none>              Approved,Issued
-```
-
-OK, so, we see two `CertificateSigningRequest` (CSR) objects.  
-One of them was requested by the `system:node:kind-control-plane` user (our kind-control-plane node).  
-And the other one was requested by us, through the user `system:bootstrap:pqrstu` from the docker container node (`joining-node`).  
-And both are in condition `Approved` and `Issued`.  
-
-Let's also see the body of the CSR object created by our request.
-
-```yaml
-❯ kubectl get certificatesigningrequest csr-c5j6z -o yaml
-
-apiVersion: certificates.k8s.io/v1
-kind: CertificateSigningRequest
-metadata:
-  ...
-spec:
-  groups:
-  - system:bootstrappers
-  - system:authenticated
-  request: LS0tLS1CRUdJTi****LS0K
-  signerName: kubernetes.io/kube-apiserver-client-kubelet
-  usages:
-  - digital signature
-  - client auth
-  username: system:bootstrap:pqrstu
-status:
-  certificate: LS0tLS1CRUdJTiBDR****LS0K
-  conditions:
-  - ...
-    message: Auto approving kubelet client certificate after SubjectAccessReview.
-    reason: AutoApproved
-    status: "True"
-    type: Approved
-```
-
-From the object definition, I understand that the user `system:bootstrap:pqrstu`, made this CSR request for purposes, `usages: {digital signature, client auth}`.  
-And that is `AutoApproved` (after some process called `SubjectAccessReview` which I am not getting into, in this blog, but I know that is important).
-
-Nice. But what did we receive as response?
-
-I see, we got back a `certificate` and `Approved` (with `status: "True"`) in the CSR object's status section.   
-So, that means the response we got back is the CSR getting approved. (maybe, I'm still not 100% sure about which response we're talking).
-
-ok, next we also saw the part - "Kubelet was informed of the new secure connection details".  
-I want to understand how Kubelet was informed.
-
-I do see some relevant logs (truncated to just show the relevant bits):
-
-```bash
-[kubelet-start] writing CA certificate at /etc/kubernetes/pki/ca.crt
-
-[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
-```
-
-Let's check if we see anything new inside our docker container node we joined from (`joining-node`).
-
-```bash
-root@83ab08acf723:/# tree /etc/kubernetes/
-/etc/kubernetes/
-|-- kubelet.conf
-|-- manifests
-`-- pki
-    `-- ca.crt
-
-3 directories, 2 files
-```
-
-We do.  
-We now have a new directory called `/etcd/kubernetes/` which contains a `kubelet.conf` file as well as `pki/ca.crt`.  
-(same as what the logs pointed us.)
-
-Let's see the contents of the `kubelet.conf` file:
-
-```yaml
-root@0ecd1b55abc8:/# cat /etc/kubernetes/kubelet.conf 
-
-apiVersion: v1
-clusters:
-- cluster:
-    certificate-authority-data: LS0tLS1CRUd****LS0tLS0K
-    server: https://kind-control-plane:6443
-  name: default-cluster
-contexts:
-- context:
-    cluster: default-cluster
-    namespace: default
-    user: default-auth
-  name: default-context
-current-context: default-context
-kind: Config
-users:
-- name: default-auth
-  user:
-    client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
-    client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
-```
-
-The `certificate-authority-data` field stores the public certificate of Cluster's CA (Which is coming from the control-plane of the cluster).
-If you decode the value (using `echo "LS0tLS1CRUd****LS0tLS0K" | base64 -d`, it will match the contents of the `/etc/kubernetes/pki/ca.crt` on the kind-control-plane node.
-
-We also see it points to the location of the kubelet's certificates & keys - `/var/lib/kubelet/pki/`.
-
-As I understand (from reading docs):
-the kubelet generates its own certificates/keys locally (`/var/lib/kubelet/pki/Kubelet.crt/key`) and then sent the CSR to the API Server.  
-The control-plane (controller-manager?) then sign that CSR using the cluster CA keys (which we see from the field - `certificate-authority-data`).  
-And then signed certificate is written into `kubelet.conf` (to be precise here - `/var/lib/kubelet/pki/kubelet-client-current.pem`, which comes from the `status.certificate:` field of the CSR Object).
-
-The full tree of `/var/lib/kubelet/pki/` looks like:
-
-```bash
-root@fd5e81a7604b:/# tree /var/lib/kubelet/pki/
-/var/lib/kubelet/pki/
-|-- kubelet-client-2025-12-16-07-35-31.pem
-|-- kubelet-client-current.pem -> /var/lib/kubelet/pki/kubelet-client-2025-12-16-07-35-31.pem
-|-- kubelet.crt
-`-- kubelet.key
-
-1 directory, 4 files
-```
-
-(Note: The part "kubelet generate a private key and a CSR for submission to a cluster-level certificate signing process." was originally proposed as part of this design proposal - [Kubelet TLS bootstrap](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/kubelet-tls-bootstrap.md))
-
-
-So, after this point onwards, our (`joining-node`) node aka the Kubelet has its own set of signed certificates.  
-And so, the kubeadm bearer token is no longer required.  
-And all further interactions with the control-plane will use these certificates via mTLS.
-
-Also, note that - not just certificates, a lot more stuff was also added to the filesystem of the (`joining-node`) node.  
-I don't know details about every single listed item, but here's the full tree:
-
-```bash
-root@0ecd1b55abc8:/# tree /var/lib/kubelet/
-/var/lib/kubelet/
-|-- allocated_pods_state
-|-- checkpoints
-|-- config.yaml
-|-- cpu_manager_state
-|-- device-plugins
-|   `-- kubelet.sock
-|-- dra_manager_state
-|-- instance-config.yaml
-|-- kubeadm-flags.env
-|-- memory_manager_state
-|-- pki
-|   |-- kubelet-client-2025-12-16-10-18-54.pem
-|   |-- kubelet-client-current.pem -> /var/lib/kubelet/pki/kubelet-client-2025-12-16-10-18-54.pem
-|   |-- kubelet.crt
-|   `-- kubelet.key
-|-- plugins
-|-- plugins_registry
-|-- pod-resources
-|   `-- kubelet.sock
-`-- pods
-    |-- 4683e97e-5735-459f-b965-24a5ffd2f63e
-    |   |-- plugins
-    |   |   `-- kubernetes.io~empty-dir
-    |   |       `-- wrapped_kube-api-access-7v75d
-    |   |           `-- ready
-    |   `-- volumes
-    |       `-- kubernetes.io~projected
-    |           `-- kube-api-access-7v75d
-    |               |-- ca.crt -> ..data/ca.crt
-    |               |-- namespace -> ..data/namespace
-    |               `-- token -> ..data/token
-    `-- d6d5a0a6-4c4a-4cc0-984f-a63129fbefca
-        |-- plugins
-        |   `-- kubernetes.io~empty-dir
-        |       |-- wrapped_kube-api-access-c4l5m
-        |       |   `-- ready
-        |       `-- wrapped_kube-proxy
-        |           `-- ready
-        `-- volumes
-            |-- kubernetes.io~configmap
-            |   `-- kube-proxy
-            |       |-- config.conf -> ..data/config.conf
-            |       `-- kubeconfig.conf -> ..data/kubeconfig.conf
-            `-- kubernetes.io~projected
-                `-- kube-api-access-c4l5m
-                    |-- ca.crt -> ..data/ca.crt
-                    |-- namespace -> ..data/namespace
-                    `-- token -> ..data/token
-
-25 directories, 24 files
-```
-
-OK, I already feel I learnt quite a bit.
-
-Yet, our very first question is still not answered.  
-i.e., why there's a symmetric token used by kubeadm?
-
-I was actually having a chat with the creator of Kubeadm himself, Lucas Käldström (yes, the same person who wrote the above linked thesis).  
-What I learnt is - even though it's a symmetric and shared string, the token itself has two parts, where the first part (`token-id`) is supposed to be public and the second part (`token-secret`) is supposed to be private.  
-And as the name suggests the second private part of the token is supposed to be kept private (obviously.)  
-Becuase, Kubeadm tokens are to be used for establishing bidirectional trust between the client (in our case, `joining-node`) and the server (the control-plane, `api-server`).  
-- For the client (`joining-node`) to establish trust to the server (the control-plane, `api-server`), we saw the first part (`token-id`) of the token is used (`system:bootstrap:pqrstu` and the matching secret and clusterrolebinding).  
-- For the server (the control-plane, `api-server`) to establish trust to the client (`joining-node`), the entire shared token (both `token-id` and `token-secret`) can be used.  
-
-  If you look at the full kubeadm join logs again, one of the early steps you will see is - `attempting to download the KubeletConfiguration from ConfigMap "kubelet-config"`.
-  This token (stored as the Secret object in the control-plane aka the server side) can be used to sign the ConfigMap ("kubelet-config") and then on the client side (`joining-node`), the received signed ConfigMap can then be authenticated by using the same shared token.  
-  The process is explained here briefly - [ConfigMap Signing](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#configmap-signing), but the important part is - `You can verify the JWS (signature) using the HS256 scheme (HMAC-SHA256) with the full token (e.g. 07401b.f395accd246ae52d) as the shared secret.`
-
-So, even though it's a symmetric and a shared token, but it has similarities to the assymetric key pairs with its public and private parts used for separate purposes.  
-There's also this design proposal called, [bootstrap discovery](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md), which discusses the flow we see in our logs.
-
-
-Finally, I will end this post with this diagram which atleast for me, summarises nicely, the process we followed from start to end so far:
-
-
-```pgsql
-New node
-  │
-  │ kubeadm join
-  │
-  ▼
-API Server (unauthenticated)
-  │
-  │ token-based auth
-  ▼
-CSR created
-  │
-  │ CertificateSigningRequest
-  ▼
-Controller approves CSR
-  │
-  │ signed by CA
-  ▼
-kubelet gets client cert
-  │
-  │ mTLS from now on
-  ▼
-FULLY TRUSTED NODE
-```
-
-
-With that, thank you for reading so far. And I hope you also got to learn a few new things. o/
-
----
----
-
-PS: Even though the node was able to join the control-plane, but it wasn't really in a `READY` state (and I left it there, didn't troubleshoot it further).   
-
-The Kubelet logs read something like:
-
-```
-failed to mount rootfs component: mount source "overlay" ... err: invalid argument
-```
-
-
----
-
-
 <details markdown="1">
-  <summary>Please see the full raw kubeadm logs here. (click to expand)</summary>
+  <summary>Please see the full logs here. These contain all the requests logged with the token in use in request's headers. (click to expand)</summary>
 {% raw %}
 ```bash
 root@83ab08acf723:/# kubeadm join 172.18.0.2:6443   --token="pqrstu.abcdef1234567890"   --discovery-token-unsafe-skip-ca-verification --v=9
@@ -771,7 +477,7 @@ I1215 14:50:15.304427     230 type.go:165] "Request Body" body=""
 I1215 14:50:15.304525     230 round_trippers.go:527] "Request" curlCommand=<
 	curl -v -XGET  -H "Accept: application/vnd.kubernetes.protobuf,application/json" -H "User-Agent: kubeadm/v1.35.0 (linux/amd64) kubernetes/f35f950" -H "Authorization: Bearer <masked>" 'https://kind-control-plane:6443/api/v1/namespaces/kube-system/configmaps/kubeadm-config?timeout=10s'
  >
-I1215 14:50:15.305280     230 round_trippers.go:547] "HTTP Trace: DNS Lookup resolved" host="kind-control-plane" address=[{"IP":"172.18.0.2","Zone":""},{"IP":"fc00:f853:ccd:e793::2","Zone":""}]
+I1215 14:50:15.305280     230 round_trippers.go:547] "HTTP Trace: DNS Lookup resolved" host="kind-control-plane" address=[{"IP":"172.18.0.2","Zone":""},{"IP":"fc00:****::2","Zone":""}]
 I1215 14:50:15.305519     230 round_trippers.go:562] "HTTP Trace: Dial succeed" network="tcp" address="172.18.0.2:6443"
 I1215 14:50:15.312270     230 round_trippers.go:632] "Response" verb="GET" url="https://kind-control-plane:6443/api/v1/namespaces/kube-system/configmaps/kubeadm-config?timeout=10s" status="200 OK" headers=<
 	Audit-Id: dc851cb8-00d2-499a-9d93-791b645d3175
@@ -1100,7 +806,7 @@ I1215 14:50:15.324583     230 initconfiguration.go:114] skip CRI socket detectio
 I1215 14:50:15.324815     230 interface.go:432] Looking for default routes with IPv4 addresses
 I1215 14:50:15.324830     230 interface.go:437] Default route transits interface "eth0"
 I1215 14:50:15.324975     230 interface.go:209] Interface eth0 is up
-I1215 14:50:15.325021     230 interface.go:257] Interface "eth0" has 3 addresses :[172.18.0.3/16 fc00:f853:ccd:e793::3/64 fe80::5092:11ff:fe0b:4722/64].
+I1215 14:50:15.325021     230 interface.go:257] Interface "eth0" has 3 addresses :[172.18.0.3/16 fc00:****::3/64 fe80::****/64].
 I1215 14:50:15.325041     230 interface.go:224] Checking addr  172.18.0.3/16.
 I1215 14:50:15.325057     230 interface.go:231] IP found 172.18.0.3
 I1215 14:50:15.325072     230 interface.go:263] Found valid IPv4 address 172.18.0.3 for interface "eth0".
@@ -1155,3 +861,290 @@ Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
 ```
 {% endraw %}
 </details>
+
+On the Kind cluster's control-plane node, I can see this new docker container node showing up:
+
+```bash
+❯ kubectl get nodes 
+NAME                 STATUS     ROLES           AGE    VERSION
+83ab08acf723         NotReady   <none>          108s   v1.35.0-alpha.2.488+f35f9509a69cc6
+kind-control-plane   Ready      control-plane   106m   v1.34.0
+```
+
+So, at this point now.  
+We've answered our second question also.   
+i.e, `can I try to create a kubeadm token manually and use that to join an existing Kubernetes cluster successfully?`.  
+Yes, I can! We saw it above!
+
+But wait, what next now?
+
+We saw the following bit in our output:
+
+```bash
+This node has joined the cluster:
+* Certificate signing request was sent to apiserver and a response was received.
+* The Kubelet was informed of the new secure connection details.
+```
+
+I have more questions now.
+- What is the "Certificate signing request"? And what "response" we received?
+- The Kubelet was informed of the new secure connection details. How?
+
+Let's try to answer them now.
+
+So, back to the control-plane node, let's check the following:
+
+```bash
+❯ kubectl get certificatesigningrequest -A
+
+NAME        AGE     SIGNERNAME                                    REQUESTOR                        REQUESTEDDURATION   CONDITION
+csr-c5j6z   7m46s   kubernetes.io/kube-apiserver-client-kubelet   system:bootstrap:pqrstu          <none>              Approved,Issued
+csr-qzbvk   112m    kubernetes.io/kube-apiserver-client-kubelet   system:node:kind-control-plane   <none>              Approved,Issued
+```
+
+OK, so, we see two `CertificateSigningRequest` (CSR) objects.  
+One of them was requested by the `system:node:kind-control-plane` user (our kind-control-plane node).  
+And the other one was requested by us, through the user `system:bootstrap:pqrstu` from the docker container node (`joining-node`).  
+And both are in condition `Approved` and `Issued`.  
+
+Let's also see the body of the CSR object created by our request.
+
+```yaml
+❯ kubectl get certificatesigningrequest csr-c5j6z -o yaml
+
+apiVersion: certificates.k8s.io/v1
+kind: CertificateSigningRequest
+metadata:
+  ...
+spec:
+  groups:
+  - system:bootstrappers
+  - system:authenticated
+  request: LS0tLS1CRUdJTi****LS0K
+  signerName: kubernetes.io/kube-apiserver-client-kubelet
+  usages:
+  - digital signature
+  - client auth
+  username: system:bootstrap:pqrstu
+status:
+  certificate: LS0tLS1CRUdJTiBDR****LS0K
+  conditions:
+  - ...
+    message: Auto approving kubelet client certificate after SubjectAccessReview.
+    reason: AutoApproved
+    status: "True"
+    type: Approved
+```
+
+From the object definition, I understand that the user `system:bootstrap:pqrstu`, made this CSR request for purposes, `usages: {digital signature, client auth}`.  
+And that is `AutoApproved` (after some process called `SubjectAccessReview` which I am not getting into, in this blog, but I know that is important).
+
+Nice. But what did we receive as response?
+
+I see, we got back a `certificate` and `Approved` (with `status: "True"`) in the CSR object's status section.   
+So, that means the response we got back is the CSR getting approved. (maybe, I'm still not 100% sure about which response we're talking).
+
+ok, next we also saw the part - "Kubelet was informed of the new secure connection details".  
+I want to understand how Kubelet was informed.
+
+I do see some relevant logs (truncated to just show the relevant bits):
+
+```bash
+[kubelet-start] writing CA certificate at /etc/kubernetes/pki/ca.crt
+
+[kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+```
+
+Let's check if we see anything new inside our docker container node we joined from (`joining-node`).
+
+```bash
+root@83ab08acf723:/# tree /etc/kubernetes/
+/etc/kubernetes/
+|-- kubelet.conf
+|-- manifests
+`-- pki
+    `-- ca.crt
+
+3 directories, 2 files
+```
+
+We do.  
+We now have a new directory called `/etcd/kubernetes/` which contains a `kubelet.conf` file as well as `pki/ca.crt`.  
+(same as what the logs pointed us.)
+
+Let's see the contents of the `kubelet.conf` file:
+
+```yaml
+root@0ecd1b55abc8:/# cat /etc/kubernetes/kubelet.conf 
+
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUd****LS0tLS0K
+    server: https://kind-control-plane:6443
+  name: default-cluster
+contexts:
+- context:
+    cluster: default-cluster
+    namespace: default
+    user: default-auth
+  name: default-context
+current-context: default-context
+kind: Config
+users:
+- name: default-auth
+  user:
+    client-certificate: /var/lib/kubelet/pki/kubelet-client-current.pem
+    client-key: /var/lib/kubelet/pki/kubelet-client-current.pem
+```
+
+The `certificate-authority-data` field stores the public certificate of Cluster's CA (Which is coming from the control-plane of the cluster).
+If you decode the value (using `echo "LS0tLS1CRUd****LS0tLS0K" | base64 -d`, it will match the contents of the `/etc/kubernetes/pki/ca.crt` on the kind-control-plane node.
+
+We also see it points to the location of the kubelet's certificates & keys - `/var/lib/kubelet/pki/`.
+
+As I understand (from reading docs):
+the kubelet generates its own certificates/keys locally (`/var/lib/kubelet/pki/Kubelet.crt/key`) and then sent the CSR to the API Server.  
+The control-plane (controller-manager?) then sign that CSR using the cluster CA keys (which we see from the field - `certificate-authority-data`).  
+And then signed certificate is written into `kubelet.conf` (to be precise here - `/var/lib/kubelet/pki/kubelet-client-current.pem`, which comes from the `status.certificate:` field of the CSR Object).
+
+The full tree of `/var/lib/kubelet/pki/` looks like:
+
+```bash
+root@fd5e81a7604b:/# tree /var/lib/kubelet/pki/
+/var/lib/kubelet/pki/
+|-- kubelet-client-2025-12-16-07-35-31.pem
+|-- kubelet-client-current.pem -> /var/lib/kubelet/pki/kubelet-client-2025-12-16-07-35-31.pem
+|-- kubelet.crt
+`-- kubelet.key
+
+1 directory, 4 files
+```
+
+(Note: The part "kubelet generate a private key and a CSR for submission to a cluster-level certificate signing process." was originally proposed as part of this design proposal - [Kubelet TLS bootstrap](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/kubelet-tls-bootstrap.md))
+
+
+So, after this point onwards, our (`joining-node`) node aka the Kubelet has its own set of signed certificates.  
+And so, the kubeadm bearer token is no longer required.  
+And all further interactions with the control-plane will use these certificates via mTLS.
+
+Also, note that - not just certificates, a lot more stuff was also added to the filesystem of the (`joining-node`) node.  
+I don't know details about every single listed item, but here's the full tree:
+
+```bash
+root@0ecd1b55abc8:/# tree /var/lib/kubelet/
+/var/lib/kubelet/
+|-- allocated_pods_state
+|-- checkpoints
+|-- config.yaml
+|-- cpu_manager_state
+|-- device-plugins
+|   `-- kubelet.sock
+|-- dra_manager_state
+|-- instance-config.yaml
+|-- kubeadm-flags.env
+|-- memory_manager_state
+|-- pki
+|   |-- kubelet-client-2025-12-16-10-18-54.pem
+|   |-- kubelet-client-current.pem -> /var/lib/kubelet/pki/kubelet-client-2025-12-16-10-18-54.pem
+|   |-- kubelet.crt
+|   `-- kubelet.key
+|-- plugins
+|-- plugins_registry
+|-- pod-resources
+|   `-- kubelet.sock
+`-- pods
+    |-- 4683e97e-5735-459f-b965-24a5ffd2f63e
+    |   |-- plugins
+    |   |   `-- kubernetes.io~empty-dir
+    |   |       `-- wrapped_kube-api-access-7v75d
+    |   |           `-- ready
+    |   `-- volumes
+    |       `-- kubernetes.io~projected
+    |           `-- kube-api-access-7v75d
+    |               |-- ca.crt -> ..data/ca.crt
+    |               |-- namespace -> ..data/namespace
+    |               `-- token -> ..data/token
+    `-- d6d5a0a6-4c4a-4cc0-984f-a63129fbefca
+        |-- plugins
+        |   `-- kubernetes.io~empty-dir
+        |       |-- wrapped_kube-api-access-c4l5m
+        |       |   `-- ready
+        |       `-- wrapped_kube-proxy
+        |           `-- ready
+        `-- volumes
+            |-- kubernetes.io~configmap
+            |   `-- kube-proxy
+            |       |-- config.conf -> ..data/config.conf
+            |       `-- kubeconfig.conf -> ..data/kubeconfig.conf
+            `-- kubernetes.io~projected
+                `-- kube-api-access-c4l5m
+                    |-- ca.crt -> ..data/ca.crt
+                    |-- namespace -> ..data/namespace
+                    `-- token -> ..data/token
+
+25 directories, 24 files
+```
+
+OK, I already feel I learnt quite a bit.
+
+Yet, our very first question is still not answered.  
+i.e., why there's a symmetric token used by kubeadm?
+
+I was actually having a chat with the creator of Kubeadm himself, Lucas Käldström (yes, the same person who wrote the above linked thesis).  
+What I learnt is - even though it's a symmetric and shared string, the token itself has two parts, where the first part (`token-id`) is supposed to be public and the second part (`token-secret`) is supposed to be private.  
+And as the name suggests the second private part of the token is supposed to be kept private (obviously.)  
+Becuase, Kubeadm tokens are to be used for establishing bidirectional trust between the client (in our case, `joining-node`) and the server (the control-plane, `api-server`).  
+- For the client (`joining-node`) to establish trust to the server (the control-plane, `api-server`), we saw the first part (`token-id`) of the token is used (`system:bootstrap:pqrstu` and the matching secret and clusterrolebinding).  
+- For the server (the control-plane, `api-server`) to establish trust to the client (`joining-node`), the entire shared token (both `token-id` and `token-secret`) can be used.  
+
+  If you look at the full kubeadm join logs again, one of the early steps you will see is - `attempting to download the KubeletConfiguration from ConfigMap "kubelet-config"`.
+  This token (stored as the Secret object in the control-plane aka the server side) can be used to sign the ConfigMap ("kubelet-config") and then on the client side (`joining-node`), the received signed ConfigMap can then be authenticated by using the same shared token.  
+  The process is explained here briefly - [ConfigMap Signing](https://kubernetes.io/docs/reference/access-authn-authz/bootstrap-tokens/#configmap-signing), but the important part is - `You can verify the JWS (signature) using the HS256 scheme (HMAC-SHA256) with the full token (e.g. 07401b.f395accd246ae52d) as the shared secret.`
+
+So, even though it's a symmetric and a shared token, but it has similarities to the assymetric key pairs with its public and private parts used for separate purposes.  
+There's also this design proposal called, [bootstrap discovery](https://github.com/kubernetes/design-proposals-archive/blob/main/cluster-lifecycle/bootstrap-discovery.md), which discusses the flow we see in our logs.
+
+
+Finally, I will end this post with this diagram which atleast for me, summarises nicely, the process we followed from start to end so far:
+
+
+```pgsql
+New node
+  │
+  │ kubeadm join
+  │
+  ▼
+API Server (unauthenticated)
+  │
+  │ token-based auth
+  ▼
+CSR created
+  │
+  │ CertificateSigningRequest
+  ▼
+Controller approves CSR
+  │
+  │ signed by CA
+  ▼
+kubelet gets client cert
+  │
+  │ mTLS from now on
+  ▼
+FULLY TRUSTED NODE
+```
+
+
+With that, thank you for reading so far. And I hope you also got to learn a few new things. o/
+
+---
+---
+
+PS: Even though the node was able to join the control-plane, but it wasn't really in a `READY` state (and I left it there, didn't troubleshoot it further).   
+
+The Kubelet logs read something like:
+
+```
+failed to mount rootfs component: mount source "overlay" ... err: invalid argument
+```
+
