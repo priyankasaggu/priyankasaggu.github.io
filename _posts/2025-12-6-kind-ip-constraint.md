@@ -5,19 +5,17 @@ tags: [personal]
 comments: false
 ---
 
-I wanted to write a quick blog, just documenting a tiny experiment I ran last week. Just dumping my rough notes as it is.  
+I wanted to write a quick blog to document a tiny experiment I ran last week.  
+Just dumping my rough notes as it is.  
 
----
+What I want to test is a scenario of creating a (Kind) cluster when it doesn't have enough IP addresses, to assign internally etc.  
+Meaning I try to create a Kind cluster and give it only a docker bridge network with 20 or 50 IP addresses (basically a very tiny pool of IP(s)).  
 
-I want to try creating a Kind cluster and give it only a bridge network with 20 or 50 IP(s) (basically a very tiny pool of IP(s)).
-
-What I want to test is a scenario of creating a (Kind) cluster if it doesn't have enough IP addresses, to assign internally etc.
-
-Actually, now that I think more, 20-50 IP(s) are actually too much.  
+Actually, now that I think more, 20-50 IP(s) are actually too much for my experiment.  
 Because the docker bridge IP pool will only be used for assigning IP(s) to the kind nodes (the control-plane and worker nodes).  
 Inside these kind nodes - for the Pods and for the Containers IP(s), the node will configure its own pool of private IP addresses, so that doesn't come from the docker bridge network from the host.
 
-Therefore, the flow is basically like:
+Therefore, the flow is roughly like:
 - (my host network) sets aside a little set of private IP for the docker bridge -> 
 - (then docker bridge network) assigns an IP to a node -> 
 - (node internal network) which assigns IP(s) to pods and containers
