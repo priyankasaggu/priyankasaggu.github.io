@@ -88,7 +88,7 @@ This translates to a private IP network `172.20.0.0` with a subnet mask of `255.
 This subnet mask will give me exactly 8 IP addresses.  
 (and that's the closest I can get to making an IP pool with exact 5 usable IP(s)).
 
-So, how these 8 IP(s) will be used, is explained following:
+So, how these 8 IP(s) will be used, is explained below:
 
 - `172.20.0.0` = network (not usable)
 - `172.20.0.1` → commonly used as gateway (Docker sets a gateway)
