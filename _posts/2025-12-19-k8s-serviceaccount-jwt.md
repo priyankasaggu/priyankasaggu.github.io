@@ -543,7 +543,7 @@ And also, I should not forget it all started with me just trying to understand w
 
 I got my answer and I learnt so much more.
 
-There's an article that I haven't read just yet, but I was recommended to read.  
+There's an article that I haven't read just yet, but I was recommended to read (by [Lucas Käldström](https://github.com/luxas)).  
 Because, we didn't end with a shiny green "verified" message, I will leave you to read that brilliant article -   
 [RSA Signing is Not RSA Decryption](https://www.cs.cornell.edu/courses/cs5430/2015sp/notes/rsa_sign_vs_dec.php)
 
