@@ -64,9 +64,9 @@ Now `base64` decode the above token we got.
 base64: invalid input
 ```
 
-ok, we got an invalid input. Don't worry, we'll fix that.  
+Ah, I got an invalid input. I'll fix it in a bit.
 
-What I learnt next is that a JWT token is a three part thing.  
+But what I learnt is that a JWT token is a three part thing.  
 Each part is a Base64 encoded blob, separated (or joined by a dot).  
 So, a full token will look something like:
 
@@ -512,7 +512,6 @@ What we have to verify is Part 1 and Part 2, which is what is signed by Part 3.
 So, let's sort out the the required parts. 
 
 ```bash
-/ # echo $TOKEN
 ❯ TOKEN=eyJhbGciOiJSUzI1NiIsImtpZCI6IncwY3FpcXhvZGt1SFlGelNQa1FwenFMcmpoeEFkVi1McjFYcTZVTEh3X1kifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk3Njg3ODgxLCJpYXQiOjE3NjYxNTE4ODEsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiNmJiNzc0MjMtNmE3Yi00MjBmLTg1MDgtOTUzY2Y0YmE5MWZhIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwibm9kZSI6eyJuYW1lIjoia2luZC1jb250cm9sLXBsYW5lIiwidWlkIjoiNWU0MmM4M2YtMmI2NC00ZjU3LWEyZGMtMjI3M2ZmZjk3ZTBlIn0sInBvZCI6eyJuYW1lIjoiand0LXRlc3QiLCJ1aWQiOiI4M2E5YmE4OC0yOTg5LTRlYmItYTRiZS04ZjA0ODY2ZmM4OGEifSwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImRlZmF1bHQiLCJ1aWQiOiI4Y2ZhNWYxNS0wOWJhLTRmM2QtODE2Ny02OGFhNjE5ZjRmN2YifSwid2FybmFmdGVyIjoxNzY2MTU1NDg4fSwibmJmIjoxNzY2MTUxODgxLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkZWZhdWx0In0.ByKLRb2376aYeAmOWL1LTHsRmwgjWYp3kklUmoDcAzfMXWOBOcU_R4iXC4UqM5iwpEw_lWhDgEndGghiUg6HFau0rtj5VxFiFWwXkxSfzYNvxzW_nO3uFZlI4R3tWJqIeLMX3hqaWQGb_LvfvjI1My6XNZhkt8UTByUg3nKTmtMWmg-9-XKMylmD078vT4n8f0nSL6YlchJuTFivWc1lGE-FrZmWk6WeiRtH_jTyXp95dhg_Chf566otezUrPE8ern-8sI0rSVDzvLNsF4YvL9IXx2JQn57QR_Pr3otFXpeUTgj5oBUllsCTrA2xpXRmWxUD9qoncjviVkAkcj1fiw
 
 ❯ echo -n "$TOKEN" | cut -d. -f1,2 > signed-data.txt
