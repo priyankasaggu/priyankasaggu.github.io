@@ -9,7 +9,7 @@ _(More of my "notes for self", as I continue reading the thesis paper, [Usable A
 
 I ran another small experiment today.
 
-Today, I learnt that the Kubernetes Service Account tokens that we use very often to authenticate with the API server (using `Authorization: Bearer <token>` header with the HTTP request) are JWT (JSON Web Token) tokens.
+Today, I learnt that the Kubernetes Service Account tokens that I use very often to authenticate with the API server (using `Authorization: Bearer <token>` header with the HTTP request) are JWT (JSON Web Token) tokens.
 
 I learnt this as a verbal fact first, so, I wanted to verify it in my mighty Kind cluster.
 
@@ -45,7 +45,7 @@ pod/jwt-test created
 / # 
 ```
 
-Now, we're inside our container, let's run some tests.
+Now, I'm inside our container, let's run some tests.
 
 First, print the contents of the `/var/run/secrets/kubernetes.io/serviceaccount/token` file.
 
@@ -55,7 +55,7 @@ First, print the contents of the `/var/run/secrets/kubernetes.io/serviceaccount/
 eyJhbGciOiJSUzI1NiIsImtpZCI6IncwY3FpcXhvZGt1SFlGelNQa1FwenFMcmpoeEFkVi1McjFYcTZVTEh3X1kifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk3Njg0MTc3LCJpYXQiOjE3NjYxNDgxNzcsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiMGQyMTFiNGEtNjVjMi00ODEyLWIwYjEtNGUzY2I2NzI5ZGMzIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwibm9kZSI6eyJuYW1lIjoia2luZC1jb250cm9sLXBsYW5lIiwidWlkIjoiNWU0MmM4M2YtMmI2NC00ZjU3LWEyZGMtMjI3M2ZmZjk3ZTBlIn0sInBvZCI6eyJuYW1lIjoiand0LXRlc3QiLCJ1aWQiOiJlNDdmMDVlZi00MWMzLTRmNDctYTdmNC01MDc1ZmIzZGQ2ZDMifSwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImRlZmF1bHQiLCJ1aWQiOiI4Y2ZhNWYxNS0wOWJhLTRmM2QtODE2Ny02OGFhNjE5ZjRmN2YifSwid2FybmFmdGVyIjoxNzY2MTUxNzg0fSwibmJmIjoxNzY2MTQ4MTc3LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkZWZhdWx0In0.PA010UKl5ldQCOAk5s-iNRHEsbxkyIscTUsNn1c3hE9TL-uTCTl7_7QnI8-NOmx5Qjj7GPvF2QaHCeynOXlLq-Nt5mcvnOb6IipTfcH0Mfa7OCBufgPo82ggUA7T09kwcs7pmxZoL_lHxBBElFOMl9cMyhYO7I46JZ_AmvmzO4ctD3_ojQ6cyciXx4YZt78IwbM9QdM24e64BjyI_rdCGk3Y8990zodydn447VP9V6UAVQJJV49eleUnWMnQHTc3Z8UGjmawLeSaDQTqxXQ_fr9YTpHwbA_MqmXggFAmVIVQo0hTjfZxtcxuJe-8mM69Lm9krNJ7PsEuQeUB_9WyxA
 ```
 
-Now `base64` decode the above token we got.
+Now `base64` decode the above token I got.
 
 ```bash
 ❯ echo "eyJhbGciOiJSUzI1NiIsImtpZCI6IncwY3FpcXhvZGt1SFlGelNQa1FwenFMcmpoeEFkVi1McjFYcTZVTEh3X1kifQ.eyJhdWQiOlsiaHR0cHM6Ly9rdWJlcm5ldGVzLmRlZmF1bHQuc3ZjLmNsdXN0ZXIubG9jYWwiXSwiZXhwIjoxNzk3Njg0MTc3LCJpYXQiOjE3NjYxNDgxNzcsImlzcyI6Imh0dHBzOi8va3ViZXJuZXRlcy5kZWZhdWx0LnN2Yy5jbHVzdGVyLmxvY2FsIiwianRpIjoiMGQyMTFiNGEtNjVjMi00ODEyLWIwYjEtNGUzY2I2NzI5ZGMzIiwia3ViZXJuZXRlcy5pbyI6eyJuYW1lc3BhY2UiOiJkZWZhdWx0Iiwibm9kZSI6eyJuYW1lIjoia2luZC1jb250cm9sLXBsYW5lIiwidWlkIjoiNWU0MmM4M2YtMmI2NC00ZjU3LWEyZGMtMjI3M2ZmZjk3ZTBlIn0sInBvZCI6eyJuYW1lIjoiand0LXRlc3QiLCJ1aWQiOiJlNDdmMDVlZi00MWMzLTRmNDctYTdmNC01MDc1ZmIzZGQ2ZDMifSwic2VydmljZWFjY291bnQiOnsibmFtZSI6ImRlZmF1bHQiLCJ1aWQiOiI4Y2ZhNWYxNS0wOWJhLTRmM2QtODE2Ny02OGFhNjE5ZjRmN2YifSwid2FybmFmdGVyIjoxNzY2MTUxNzg0fSwibmJmIjoxNzY2MTQ4MTc3LCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkZWZhdWx0In0.PA010UKl5ldQCOAk5s-iNRHEsbxkyIscTUsNn1c3hE9TL-uTCTl7_7QnI8-NOmx5Qjj7GPvF2QaHCeynOXlLq-Nt5mcvnOb6IipTfcH0Mfa7OCBufgPo82ggUA7T09kwcs7pmxZoL_lHxBBElFOMl9cMyhYO7I46JZ_AmvmzO4ctD3_ojQ6cyciXx4YZt78IwbM9QdM24e64BjyI_rdCGk3Y8990zodydn447VP9V6UAVQJJV49eleUnWMnQHTc3Z8UGjmawLeSaDQTqxXQ_fr9YTpHwbA_MqmXggFAmVIVQo0hTjfZxtcxuJe-8mM69Lm9krNJ7PsEuQeUB_9WyxA" | base64 -d
@@ -64,7 +64,7 @@ Now `base64` decode the above token we got.
 base64: invalid input
 ```
 
-Ah, I got an invalid input. I'll fix it in a bit.
+Ah, I got an invalid input.
 
 But what I learnt is that a JWT token is a three part thing.  
 Each part is a Base64 encoded blob, separated (or joined by a dot).  
@@ -109,14 +109,14 @@ _**Decode Part 1:**_
 }
 ```
 
-The first key-value pair `"alg": "RS256"` in the output tells us, that this JWT token (which we will get in the next Part 2 decoding) was signed using a RS256 (RSA + SHA-256) algorithm.  
-So, if we need to verify the token signature, we know what is the algorithm used to sign it.
+The first key-value pair `"alg": "RS256"` in the output tells us, that this JWT token (which I will get in the next Part 2 decoding) was signed using a RS256 (RSA + SHA-256) algorithm.  
+So, if I need to verify the token signature, I know what is the algorithm used to sign it.
 
 And the second key-value pair, the `"kid": "w0cqiqxodkuHYFzSPkQpzqLrjhxAdV-Lr1Xq6ULHw_Y"` part.  
 This is a hint to figure out which RS256 (RSA + SHA-256) private/pubic key pair was actually used to sign.  
-The value we see in front of `kid` is going to help us to figure out the public key of this pair.  
+The value I see in front of `kid` is going to help us to figure out the public key of this pair.  
 
-But where to find the Public Key? That information, we will get in the next part.
+But where to find the Public Key? That information, I will get in the next part.
 
 ---
 
@@ -159,7 +159,7 @@ Ok, this is the JWT token.
 
 - The `"iss": "https://kubernetes.default.svc.cluster.local"` is what issued this JWT token. So, it's the Issuer.  
 
-  This is what we will use (later) to figure out the location of the public key.
+  This is what I will use (later) to figure out the location of the public key.
   
 - The `"aud": ["https://kubernetes.default.svc.cluster.local"]` tells us that who is the intended audience for this token.
 
@@ -211,7 +211,7 @@ echo "PA010UKl5ldQCOAk5s-iNRHEsbxkyIscTUsNn1c3hE9TL-uTCTl7_7QnI8-NOmx5Qjj7GPvF2Q
 5�B��W�$�base64: invalid input
 ```
 
-We some some random binary code here.
+I got some some random binary code here.
 
 This I learnt is a raw RSA signature, that is used to sign the first 2 parts (Header and Payload) of the token.
 
@@ -229,19 +229,19 @@ RSA-SIGN(
 
 ### where to find the Public key (used to sign the JWT token)?
 
-We saw in Part 2 decoded output this entry about who issued the token.
+I saw in Part 2 decoded output this entry about who issued the token.
 
 ```
 "iss": "https://kubernetes.default.svc.cluster.local",
 ```
 
-Let's see if we can find out some information from this Issuer url.
+Let's see if I can find out some information from this Issuer url.
 
 
 
-But one thing to note, before we make any request.
+But one thing to note, before I make any request.
 
-The Issuer of a JWT token stores the information that we are looking for at a path:
+The Issuer of a JWT token stores the information that I am looking for at a path:
 
 ```
 https://<url-of-the-issuer>/.well-known/openid-configuration
@@ -257,13 +257,13 @@ wget: note: TLS certificate validation not implemented
 wget: server returned error: HTTP/1.1 403 Forbidden
 ```
 
-ok, when we tried to hit the `https://kubernetes.default.svc.cluster.local` url, we got `403 Forbidden`.
+ok, when I tried to hit the `https://kubernetes.default.svc.cluster.local` url, I got `403 Forbidden`.
 
-So, we need some credentials.
+So, I need some credentials.
 
 You know what, here is what the Service Account token is used for.
 
-We will pass the token as a Autherization header in our request.
+I will pass the token as a Autherization header in our request.
 
 Let's try again.
 
@@ -297,7 +297,7 @@ Ok, look at this part - `"jwks_uri": "https://172.20.0.2:6443/openid/v1/jwks"`.
 The "jwks" in the `jwks_url` stands for "JSON Web Key Set".  
 This is what holds a collection of cryptographic public keys, used primarily for verifying digital signatures on JWT tokens.
 
-So, we have almost gotten what we need.  
+So, I have almost gotten what I need.  
 Let's hit this JWKS URL now.
 
 ```bash
@@ -322,9 +322,9 @@ jwks                 100% |*****************************************************
 }
 ```
 
-Voila, we got it.
+Voila, I got it.
 
-See, the `kid` and `alg` matches exactly what we got in the decoded output of Part 1 of the JWT token.
+See, the `kid` and `alg` matches exactly what I got in the decoded output of Part 1 of the JWT token.
 
 ```bash
 {
@@ -337,7 +337,7 @@ So, I think the last part left for us now is to understand how can i use this to
 
 ### let's verify the token!
 
-So, to verify the token. We will need the following bit we got from the `jwks_uri` output.
+So, to verify the token. I will need the following bit I got from the `jwks_uri` output.
 
 ```bash
 "n": "vKsQjvpHQWbez2dLiTb2aJp36SKpVWvk-egE1pRertMJmtq3eeDPskb8n_msAWY4GKIMx3RnmfKBMbs_WHAkVt681cH0AzF5CR_oUtJ0Unde1rInUls5nxQcQ7_cCjApyKQlY5x5Z_vASyh7fOvMKUWmfLJt7M20hDoEvlM0WF9kUeqAgexBXlFv106qc-3CoO2-HPN6mlOn8WqHd-Ky_jQaj5xm__A0o04H7JEu09n7_Z9Rws9TFqBHaGCXwio3cozh2Bjv6da7rmyZUSp7ztH_4UcfYQgt5iJnxUdsjD7vXnyWFwvefs-6Wn6vlRp4fVmCfNrkzDL7QPWsjJJoWQ",
@@ -346,18 +346,18 @@ So, to verify the token. We will need the following bit we got from the `jwks_ur
 
 Note: all notes this point onwards is me copy/pasting instructions I got from docs or otherwise tinkering with AI. 
 
-The `n` and `e` are respectively called the "modulus" and "public exponent" which is what we will use to contruct the RSA public key.
+The `n` and `e` are respectively called the "modulus" and "public exponent" which is what I will use to contruct the RSA public key.
 
 Below mathematics is what is used to convert the "n" and "e" to a public key.
 
-What the following process does is 5 things for the "n" and "e" values we got:
+What the following process does is 5 things for the "n" and "e" values I got:
 - convert them from `base64url` to `base64` to `binary`.
 - then interpret them as Integers
 - then wrap them into something called `ASN.1` structure
 - then do something called DER (Distinguished Encoding Rules) encoding this above `ASN.1` structure
 - and finall wrap that `DER` into a PEM.
 
-Once we got the PEM version, at that point, openssl will be able to use it.
+Once I got the PEM version, at that point, openssl will be able to use it.
 
 
 I'm doing the below steps on my host machine, because i need `openssl`, `base64`, `xxd`, and `jq`, which are not present in the container.
@@ -531,7 +531,7 @@ Verification failure
 40F7505CB27F0000:error:1C880004:Provider routines:rsa_verify_directly:RSA lib:providers/implementations/signature/rsa_sig.c:1043:
 ```
 
-and we failed. 😂
+and I failed. 😂
 
 Goodness, the process was tiring, so, I'm not repeating it right now.
 
